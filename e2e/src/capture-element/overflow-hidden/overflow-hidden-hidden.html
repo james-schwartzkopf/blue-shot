@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+  <title>basic-test</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    #hidden-parent {
+      margin: 50px;
+      padding: 5px;
+      height: 200px;
+      width: 300px;
+      background-color: chartreuse;
+      border: red solid 5px;
+
+      overflow: hidden;
+    }
+    #test-box {
+      margin: 50px;
+      border: blue solid 5px;
+      width: 300px;
+      height: 200px;
+      background-color: aqua;
+
+      margin-top: 250px;
+      margin-left: 350px;
+    }
+  </style>
+</head>
+<body>
+  <br>
+  <div id="hidden-parent">
+    <div id="test-box"></div>
+  </div>
+  <br>
+</body>
+</html>

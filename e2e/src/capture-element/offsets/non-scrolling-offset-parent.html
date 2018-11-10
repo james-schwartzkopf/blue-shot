@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <title>basic-test</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    #non-scrolling-offset-parent {
+      margin: 50px;
+      padding: 5px;
+      height: 400px;
+      width: 500px;
+      background-color: chartreuse;
+      border: red solid 5px;
+
+      /* relative will make this text-box's offset parent */
+      position: relative;
+
+      /* auto, but we should be tall enough not to scroll */
+      overflow: auto;
+    }
+    #test-box {
+      margin: 50px;
+      border: blue solid 5px;
+      width: 300px;
+      height: 200px;
+      background-color: aqua;
+    }
+  </style>
+</head>
+<body>
+  <br> <!-- TODO Without these body is offset from HTML and final offsetParent is body, so bad things happen? -->
+  <div id="non-scrolling-offset-parent">
+    <div id="test-box"></div>
+  </div>
+  <br>
+</body>
+</html>

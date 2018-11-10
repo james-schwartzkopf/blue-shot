@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+  <title>basic-test</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    #scrolling-non-offset-parent {
+      margin: 50px;
+      padding: 5px;
+      height: 400px;
+      width: 500px;
+      background-color: chartreuse;
+      border: red solid 5px;
+
+      /* static (default) means this element is not an offset parent */
+      position: static;
+
+      overflow: scroll;
+    }
+    /* spacer to force scroll */
+    #scrolling-non-offset-parent::after {
+      display: block;
+      height: 500px;
+      content: " "
+    }
+    #non-scrolling-offset-parent {
+      background-color: fuchsia;
+      border: orange solid 5px;
+      position: relative;
+      padding: 50px;
+    }
+    #test-box {
+      margin: 50px;
+      border: blue solid 5px;
+      width: 300px;
+      height: 200px;
+      background-color: aqua;
+    }
+  </style>
+</head>
+<body>
+  <br>
+  <div id="scrolling-non-offset-parent">
+    <div id="non-scrolling-offset-parent">
+      <div id="test-box"></div>
+    </div>
+  </div>
+  <br>
+</body>
+</html>

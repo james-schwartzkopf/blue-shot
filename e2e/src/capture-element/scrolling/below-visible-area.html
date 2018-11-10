@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+  <title>basic-test</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    #scrolling-parent {
+      margin: 50px;
+      padding: 5px;
+      height: 400px;
+      width: 500px;
+      background-color: chartreuse;
+      border: red solid 5px;
+
+      overflow: auto;
+    }
+    #test-box {
+      margin: 50px;
+      border: blue solid 5px;
+      width: 300px;
+      height: 200px;
+      background-color: aqua;
+
+      /* space in front so text-box is below visible area */
+      margin-top: 500px;
+    }
+  </style>
+</head>
+<body>
+  <br>
+  <div id="scrolling-parent">
+    <div id="test-box"></div>
+  </div>
+  <br>
+</body>
+</html>

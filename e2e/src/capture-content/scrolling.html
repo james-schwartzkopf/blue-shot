@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <title>basic-test</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    #scrolling-parent {
+      margin: 50px;
+      /*
+        Originally I had padding here, but it serves no purpose, and produces different scrollHeights between firefox/chrome
+        https://github.com/w3c/csswg-drafts/issues/129
+      */
+      /*padding: 5px;*/
+      height: 400px;
+      width: 500px;
+      background-color: chartreuse;
+      border: red solid 5px;
+
+      /* static (default) means this element is not an offset parent */
+      position: static;
+
+      overflow: scroll;
+    }
+    /* spacer to force scroll */
+    #scrolling-parent::before {
+      display: block;
+      height: 500px;
+      content: " "
+    }
+    /* spacer to force scroll */
+    #scrolling-parent::after {
+      display: block;
+      height: 500px;
+      content: " "
+    }
+
+    #test-box {
+      margin: 50px;
+      border: blue solid 5px;
+      width: 300px;
+      height: 200px;
+      background-color: aqua;
+    }
+  </style>
+</head>
+<body>
+  <br>
+  <div id="scrolling-parent"><div id="test-box"></div></div>
+  <br>
+</body>
+</html>

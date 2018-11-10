@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+  <title>basic-test</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      width: 1000px;
+      height: 1000px
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      height: 20px;
+      width: 100%;
+      background-color: orange;
+    }
+    .left-sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 100%;
+      background-color: cornflowerblue;
+    }
+    /* These two actually hide the scrollbars, not practical, but we don't care */
+    .footer {
+      position: fixed;
+      bottom: 0;
+      height: 40px;
+      width: 100%;
+      background-color: burlywood;
+    }
+    .right-sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 40px;
+      height: 100%;
+      background-color: cadetblue;
+    }
+
+    .top-left-box {
+      background-color: fuchsia;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 22px;
+      height: 22px;
+    }
+    .top-right-box {
+      background-color: fuchsia;
+      position: absolute;
+      top: 0;
+      left: 958px;
+      width: 42px;
+      height: 22px;
+    }
+    .bottom-left-box {
+      background-color: fuchsia;
+      position: absolute;
+      top: 958px;
+      left: 0;
+      width: 22px;
+      height: 42px;
+    }
+    .bottom-right-box {
+      background-color: fuchsia;
+      position: absolute;
+      top: 958px;
+      left: 958px;
+      width: 42px;
+      height: 42px;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-left-box"></div>
+  <div class="top-right-box"></div>
+  <br>
+  <div class="bottom-left-box"></div>
+  <div class="bottom-right-box"></div>
+
+  <div class="header"></div>
+  <div class="left-sidebar"></div>
+  <div class="right-sidebar"></div>
+  <div class="footer"></div>
+</body>
+</html>

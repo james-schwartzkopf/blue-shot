@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+  <title>basic-test</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    #clipping-parent {
+      margin: 50px;
+      height: 150px;
+      width: 250px;
+      background-color: chartreuse;
+      border: red solid 5px;
+
+      position: relative;
+    }
+    .content {
+      height: 100%;
+      width: 100%;
+      overflow: auto;
+    }
+    .content .bottom {
+      width: 100%;
+      background-color: red;
+
+      /* with the scrollbar, 24 will leave us with 1 pixel over the footer */
+      height: 24px;
+    }
+    #test-box {
+      margin: 50px;
+      border: blue solid 5px;
+      width: 300px;
+      height: 200px;
+      background-color: aqua;
+
+      margin-top: 200px;
+      margin-left: 300px;
+    }
+    .header {
+      position: absolute;
+      top: 0;
+      height: 20px;
+      width: 100%;
+      background-color: orange;
+    }
+    .left-sidebar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 100%;
+      background-color: cornflowerblue;
+    }
+    /* These two actually hide the scrollbars, not practical, but we don't care */
+    .footer {
+      position: absolute;
+      bottom: 0;
+      height: 40px;
+      width: 100%;
+      background-color: burlywood;
+    }
+    .right-sidebar {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 40px;
+      height: 100%;
+      background-color: cadetblue;
+    }
+  </style>
+</head>
+<body>
+  <br>
+  <div id="clipping-parent">
+    <div class="content">
+      <br>
+      <div id="test-box"></div>
+      <div class="spacer" style="width: 1000px; height: 1000px;">&nbsp;</div>
+      <br>
+      <div class="bottom"></div>
+    </div>
+    <div class="header"></div>
+    <div class="left-sidebar"></div>
+    <div class="right-sidebar"></div>
+    <div class="footer"></div>
+  </div>
+  <br>
+</body>
+</html>
