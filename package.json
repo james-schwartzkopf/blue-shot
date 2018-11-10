@@ -24,7 +24,7 @@
     "README.md",
     "LICENSE"
   ],
-y  "scripts": {
+  "scripts": {
     "build": "tsc -p tsconfig.json",
     "build-watch": "tsc -p tsconfig.json --watch",
     "e2e": "protractor e2e/protractor.conf.js",
