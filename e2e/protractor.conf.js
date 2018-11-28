@@ -19,7 +19,7 @@ exports.config = {
     {'browserName': 'microsoftedge'},
   ],
   // directConnect: true,
-  baseUrl: 'http://localhost:4300/',
+  baseUrl: 'http://localhost:4321/',
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,
@@ -33,7 +33,7 @@ exports.config = {
     // const server = http.createServer((req, resp) =>
     //   serveStatic(require('path').join(__dirname, 'src'), {fallthrough : false})(req, resp, require('finalhandler'))
     // );
-    server.listen(4300);
+    server.listen(4321);
   },
   onPrepare() {
     const tsConfig = require('path').join(__dirname, './tsconfig.e2e.json');
