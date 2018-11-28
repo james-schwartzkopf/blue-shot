@@ -295,7 +295,9 @@ function adjustForClip(origin: Point, r: Rect, clip: Rect): [Point, Rect] {
 function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
   async function captureScreenRegion(r: Rect, dest: PNG, destPoint: Point): Promise<void> {
     const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));
-
+    if (log) {
+      log('captureScreenRegion', r, destPoint);
+    }
     PNG.bitblt(
       screenPng,
       dest,
