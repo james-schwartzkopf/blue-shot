@@ -59,6 +59,8 @@ exports.config = {
     enableLogger();
 
     const { setViewportSize } = require('./src/utils');
-    return setViewportSize(800, 900);
+
+    //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
+    return setViewportSize(800, 600);
   }
 };

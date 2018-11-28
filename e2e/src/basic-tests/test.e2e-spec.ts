@@ -1,4 +1,4 @@
-import { $, browser, By, element } from 'protractor';
+import { $, browser } from 'protractor';
 import { captureElement } from 'blue-shot';
 import { applyMask, fillRect } from '../utils';
 import { PNG } from 'pngjs';
@@ -20,7 +20,7 @@ describe('basic', () => {
     fillRect(png, {top: 6, left: 10, width: 5, height: 10}, [0xff, 0xae, 0x19, 0xFF]);
     expect(png).toMatchBaseline('basic-tests/test-box-fill-rect.png');
   });
-  fit('applyMash from readme works', async () => {
+  it('applyMask from readme works', async () => {
     await browser.get('basic-tests/basic-test.html');
 
     await browser.executeScript((el: HTMLElement) => {

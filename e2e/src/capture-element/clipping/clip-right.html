@@ -63,6 +63,23 @@
       background-color: cadetblue;
     }
   </style>
+
+  <script>
+    //We need to account for different browser/OS scroll bar sizes
+    window.onload = function () {
+      window.blueShot = {scrollBar: {}, margins: {}};
+      window.blueShot.scrollBar.height = 150 - 10 - document.querySelector('.content').clientHeight;
+      window.blueShot.scrollBar.width = 250 - 10 - document.querySelector('.content').clientWidth;
+      window.blueShot.margins.topHeight = document.querySelector('.header').getBoundingClientRect().height;
+      window.blueShot.margins.leftWidth = document.querySelector('.left-sidebar').getBoundingClientRect().width;
+      window.blueShot.margins.bottomHeight = document.querySelector('.footer').style.height = 23 + window.blueShot.scrollBar.height;
+      window.blueShot.margins.rightWidth = document.querySelector('.right-sidebar').style.width = 23 + window.blueShot.scrollBar.width;
+
+      document.querySelector('.footer').style.height = '' + window.blueShot.margins.bottomHeight + 'px';
+      document.querySelector('.right-sidebar').style.width = '' + window.blueShot.margins.rightWidth + 'px';
+    };
+  </script>
+
 </head>
 <body>
   <br>

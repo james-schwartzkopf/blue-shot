@@ -1,5 +1,5 @@
 import { browser, By, element } from 'protractor';
-import { captureElement, clipView } from 'blue-shot';
+import { captureElement, ClipMargins, clipView } from 'blue-shot';
 
 //tslint:disable:no-non-null-assertion
 
@@ -172,20 +172,24 @@ describe('captureElement', () => {
     it('Element clipped right', async () => {
       const path = 'capture-element/clipping/clip-right';
       await browser.get(`${path}.html`);
+      //margins need adjusting for scrollbars (bottom/right) since they vary by browser/OS
+      const pageInfo = await browser.executeScript<{margins: ClipMargins}>(() => (<any>window).blueShot);
       const png = await captureElement(
         browser,
         element(By.id('test-box')),
-        clipView(element(By.id('clipping-parent')), {topHeight: 20, leftWidth: 20, bottomHeight: 40, rightWidth: 40})
+        clipView(element(By.id('clipping-parent')), pageInfo.margins)
       );
       expect(png).toMatchBaseline(`${path}.png`);
     });
     it('Element clipped bottom', async () => {
       const path = 'capture-element/clipping/clip-bottom';
       await browser.get(`${path}.html`);
+      //margins need adjusting for scrollbars (bottom/right) since they vary by browser/OS
+      const pageInfo = await browser.executeScript<{margins: ClipMargins}>(() => (<any>window).blueShot);
       const png = await captureElement(
         browser,
         element(By.id('test-box')),
-        clipView(element(By.id('clipping-parent')), {topHeight: 20, leftWidth: 20, bottomHeight: 40, rightWidth: 40})
+        clipView(element(By.id('clipping-parent')), pageInfo.margins)
       );
       expect(png).toMatchBaseline(`${path}.png`);
     });

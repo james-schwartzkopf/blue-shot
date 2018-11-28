@@ -21,7 +21,7 @@
       overflow: auto;
     }
     .content .bottom {
-      width: 100%;
+      width: 26px;
       background-color: red;
 
       /* with the scrollbar, 24 will leave us with 1 pixel over the footer */
@@ -34,7 +34,8 @@
       height: 200px;
       background-color: aqua;
 
-      margin-top: 200px;
+      margin-top: 218px;
+      margin-bottom: 68px;
       margin-left: 300px;
     }
     .header {
@@ -56,7 +57,7 @@
     .footer {
       position: absolute;
       bottom: 0;
-      height: 40px;
+      /*height: 40px;*/
       width: 100%;
       background-color: burlywood;
     }
@@ -64,20 +65,31 @@
       position: absolute;
       top: 0;
       right: 0;
-      width: 40px;
+      /*width: 40px;*/
       height: 100%;
       background-color: cadetblue;
     }
   </style>
+
+  <script>
+    //We need to account for different browser/OS scroll bar sizes
+    window.onload = function () {
+      window.blueShot = {scrollBar: {}, margins: {}};
+      window.blueShot.scrollBar.height = 150 - 10 - document.querySelector('.content').clientHeight;
+      window.blueShot.scrollBar.width = 250 - 10 - document.querySelector('.content').clientWidth;
+      window.blueShot.margins.topHeight = document.querySelector('.header').getBoundingClientRect().height;
+      window.blueShot.margins.leftWidth = document.querySelector('.left-sidebar').getBoundingClientRect().width;
+      window.blueShot.margins.bottomHeight = document.querySelector('.footer').style.height = 23 + window.blueShot.scrollBar.height;
+      window.blueShot.margins.rightWidth = document.querySelector('.right-sidebar').style.width = 23 + window.blueShot.scrollBar.width;
+    };
+  </script>
 </head>
 <body>
   <br>
   <div id="clipping-parent">
     <div class="content">
-      <br>
       <div id="test-box"></div>
       <div class="spacer" style="width: 1000px; height: 1000px;">&nbsp;</div>
-      <br>
       <div class="bottom"></div>
     </div>
     <div class="header"></div>

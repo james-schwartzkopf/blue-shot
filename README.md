@@ -306,6 +306,11 @@ To install and start the e2e tests:
     gr
 use ```yarn run serve-e2e-tests``` to view the test html outside of the e2e tests.
 
+## Big Thanks
+
+Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs][homepage]
+
+[homepage]: https://saucelabs.com
 
 ## TODO
 

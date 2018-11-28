@@ -27,6 +27,23 @@
       background-color: aqua;
     }
   </style>
+
+  <script>
+    //We need to account for different browser/OS scroll bar sizes
+    window.onload = function () {
+      var scrollParent = document.querySelector('#scrolling-parent');
+      var origHeight = scrollParent.getBoundingClientRect().height;
+      var origWidth = scrollParent.getBoundingClientRect().width;
+
+      var targetClientHeight = 373;
+      var targetClientWidth = 473;
+
+      //Change height so content is the same size no matter the scrollbar size
+      scrollParent.style.height = '' + (origHeight + targetClientHeight - scrollParent.clientHeight) + 'px';
+      scrollParent.style.width = '' + (origWidth + targetClientWidth - scrollParent.clientWidth) + 'px';
+    };
+  </script>
+
 </head>
 <body>
   <br>

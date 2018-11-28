@@ -12,3 +12,4 @@ const server = http.createServer((req, res) => {
   serve(req, res, err => err ? done(err) : index(req, res, done));
 });
 server.listen(4301);
+console.log('http://localhost:4301');

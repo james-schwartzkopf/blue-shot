@@ -1,5 +1,5 @@
 import { browser, By, element } from 'protractor';
-import { captureContent, clipView } from 'blue-shot';
+import { captureContent, ClipMargins, clipView } from 'blue-shot';
 
 describe('captureContent', () => {
   it('non scrolling', async () => {
@@ -17,10 +17,13 @@ describe('captureContent', () => {
   it('with clipping', async () => {
     const path = 'capture-content/clipped';
     await browser.get(`${path}.html`);
+    //TODO after seeing this fail to a typo, need a test to verify valid margins
+    //margins need adjusting for scrollbars (bottom/right) since they vary by browser/OS
+    const pageInfo = await browser.executeScript<{margins: ClipMargins}>(() => (<any>window).blueShot);
     const png = await captureContent(
       browser,
       element(By.css('DIV.content')),
-      clipView(element(By.id('clipping-parent')), {topHeight: 20, leftWidth: 20, bottomHeight: 40, rightWidth: 40})
+      clipView(element(By.id('clipping-parent')), pageInfo.margins)
     );
     expect(png).toMatchBaseline(`${path}.png`);
   });

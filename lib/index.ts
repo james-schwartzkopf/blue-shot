@@ -326,6 +326,16 @@ export function clipView(el: WebElement, clipMargins: ClipMargins): ElementCaptu
   return {el, extra: {clipMargins}};
 }
 
+function toLoggableJSON(o: any): string {
+  return JSON.stringify(o, (key: string, value: any): any => {
+    if (value instanceof WebElement) {
+      //TODO would be nice to have some kind of id
+      return `<WebElement>`;
+    }
+    return value;
+  }, 2);
+}
+
 async function getElementInfo(
   browser: WebDriver,
   el: WebElement,
@@ -337,7 +347,7 @@ async function getElementInfo(
   ;
   if (log) {
     //tslint:disable-next-line:no-non-null-assertion
-    ret.forEach(([elInfo, extra]) => log!('el:', elInfo.description, {...elInfo, el: {}}, extra));
+    ret.forEach(([elInfo, extra]) => log!('el:', elInfo.description, toLoggableJSON(elInfo), toLoggableJSON(extra)));
   }
 
   return ret;
