@@ -16,7 +16,10 @@ export function enableLogger() {
   setLogger((...args: any[]) => console.log(...args));
 }
 
-function getOffsetInfo(targetElement: HTMLElement, ...extraParents: HTMLElement[]) {
+//To support IE, we need to be careful about the ES features we use here
+//TODO would be nice to have this compile separately so the rest could target es2017
+function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
+  const extraParents: HTMLElement[] = [].slice.apply(arguments, [1]);
   return getOffsetParents(targetElement);
 
   function hasOverflow(el: HTMLElement) {
@@ -28,11 +31,20 @@ function getOffsetInfo(targetElement: HTMLElement, ...extraParents: HTMLElement[
       && (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth || el.scrollTop > 0 || el.scrollLeft > 0)
     );
   }
+  //boooo IE :>(
+  function findIndex<T>(arr: T[], fn: ((e: T) => boolean)) {
+    for (let i = 0; i < arr.length; i++) {
+      if (fn(arr[i])) {
+        return i;
+      }
+    }
+    return -1;
+  }
   function findOverflowParent(el: HTMLElement) {
     const offset = {top: el.offsetTop, left: el.offsetLeft};
     let p = el.parentElement;
     let extra = -1;
-    while (p  && !((extra = extraParents.findIndex(e => e === p)) > -1 || hasOverflow(p))) {
+    while (p  && !((extra = findIndex(extraParents, e => e === p)) > -1 || hasOverflow(p))) {
       p = p.parentElement;
     }
 
@@ -46,17 +58,19 @@ function getOffsetInfo(targetElement: HTMLElement, ...extraParents: HTMLElement[
     const pRect = pp.getBoundingClientRect();
     const eRect = el.getBoundingClientRect();
 
-    offset.top = Math.round(eRect.top - pRect.top + pp.scrollTop - pp.clientTop);
-    offset.left = Math.round(eRect.left - pRect.left + pp.scrollLeft - pp.clientLeft);
+    //NOTE: IE didn't work when I used Math.round around the whole expression.  Hopefully this does't cause issues elsewhere
+    offset.top = Math.round(eRect.top) - Math.round(pRect.top) + pp.scrollTop - pp.clientTop;
+    offset.left = Math.round(eRect.left) - Math.round(pRect.left) + pp.scrollLeft - pp.clientLeft;
 
-    return {parent: p, offset: offset, extra};
+    return {parent: p, offset: offset, extra: extra};
   }
   function getOffsetParents(el: HTMLElement): [ElementInfo, number][] {
     const ret: [ElementInfo, number][] = [];
 
-    let extra = extraParents.findIndex(ep => ep === el);
+    let extra = findIndex(extraParents, ep => ep === el);
     let e: HTMLElement | null = el;
     while (e) {
+      const bcr = e.getBoundingClientRect();
       const overflowParent = findOverflowParent(e);
       const elInfo: ElementInfo = {
         //TODO use conditional types or something to switch between WebElement on protractor side and HTMLElement browser side
@@ -76,11 +90,17 @@ function getOffsetInfo(targetElement: HTMLElement, ...extraParents: HTMLElement[
           height: e.scrollHeight
         },
         offset: {
-          ...overflowParent.offset,
+          top: overflowParent.offset.top,
+          left: overflowParent.offset.left,
           width: e.offsetWidth,
           height: e.offsetHeight
         },
-        boundingClientRect: e.getBoundingClientRect(),
+        boundingClientRect: {
+          top: bcr.top,
+          left: bcr.left,
+          width: bcr.width,
+          height: bcr.height
+        },
         overflowX: window.getComputedStyle(e).overflowX as ElementInfo['overflowX'],
         overflowY: window.getComputedStyle(e).overflowY as ElementInfo['overflowY'],
       };

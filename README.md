@@ -306,6 +306,12 @@ To install and start the e2e tests:
     gr
 use ```yarn run serve-e2e-tests``` to view the test html outside of the e2e tests.
 
+## Browser Support
+
+Currently Blue Shot has been tested against Chrome, Firefox, and IE 11.  I intend to support all Evergreen browsers, IE 11 will
+be supported on a "Best Effort" basis.  I support IE as part of my day job, I understand how important good e2e test are for IE, but
+I also understand just how much work that can be.
+
 ## Big Thanks
 
 Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs][homepage]
