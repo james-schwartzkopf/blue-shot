@@ -11,14 +11,16 @@ exports.config = {
     './src/**/*.e2e-spec.ts'
   ],
   multiCapabilities: [
-    // {'browserName': 'chrome'},
+    {'browserName': 'chrome'},
     // //Note: If we don't disable full page screenshots, IE will reset scroll and dimensions in our screenshots
     // {'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
     // {'browserName': 'firefox'},
     // {'browserName': 'safari'},
     {'browserName': 'microsoftedge'},
   ],
-  // directConnect: true,
+
+  //NOTE: Sauce only works with certain ports for some browsers (e.g. Edge)
+  //https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQS-CanIAccessApplicationsonlocalhost?
   baseUrl: 'http://localhost:4321/',
   framework: 'jasmine',
   jasmineNodeOpts: {
