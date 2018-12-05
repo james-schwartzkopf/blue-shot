@@ -11,11 +11,11 @@ exports.config = {
     './src/**/*.e2e-spec.ts'
   ],
   multiCapabilities: [
-    {'browserName': 'chrome'},
+    {'browserName': 'firefox'},
     // //Note: If we don't disable full page screenshots, IE will reset scroll and dimensions in our screenshots
-    // {'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
+    {'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
     // {'browserName': 'firefox'},
-    // {'browserName': 'safari'},
+    {'browserName': 'safari'},
     {'browserName': 'microsoftedge'},
   ],
 

@@ -14,7 +14,7 @@ describe('captureContent', () => {
     const png = await captureContent(browser, element(By.id('scrolling-parent')));
     expect(png).toMatchBaseline(`${path}.png`);
   });
-  fit('with clipping', async () => {
+  it('with clipping', async () => {
     const path = 'capture-content/clipped';
     await browser.get(`${path}.html`);
     //TODO after seeing this fail to a typo, need a test to verify valid margins

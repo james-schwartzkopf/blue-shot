@@ -16,10 +16,16 @@ export function enableLogger() {
   setLogger((...args: any[]) => console.log(...args));
 }
 
+let savedOffsetBorder: boolean | null = null;
+export function setOffsetStyle(offsetStyle: 'border' | 'padding') {
+  savedOffsetBorder = offsetStyle === 'border';
+}
+
 //To support IE, we need to be careful about the ES features we use here
 //TODO would be nice to have this compile separately so the rest could target es2017
-function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
-  const extraParents: HTMLElement[] = [].slice.apply(arguments, [1]);
+function getOffsetInfo(offsetBorder: boolean, targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
+  //TODO how to detect??
+  const extraParents: HTMLElement[] = [].slice.apply(arguments, [2]);
   return getOffsetParents(targetElement);
 
   function hasOverflow(el: HTMLElement) {
@@ -42,28 +48,52 @@ function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElemen
   }
   function findOverflowParent(el: HTMLElement) {
     const offset = {top: el.offsetTop, left: el.offsetLeft};
+    let op = el.offsetParent;
     let p = el.parentElement;
     let extra = -1;
     while (p  && !((extra = findIndex(extraParents, e => e === p)) > -1 || hasOverflow(p))) {
+      if (p === op) {
+        op = p.offsetParent;
+        //TODO do I need to add client top/left?
+        offset.top += p.offsetTop + (offsetBorder ? p.clientTop : 0);
+        offset.left += p.offsetLeft + (offsetBorder ? p.clientLeft : 0);
+      }
       p = p.parentElement;
     }
 
+    if (p && p !== op) {
+      offset.top -= (p.offsetTop + (offsetBorder ? p.clientTop : 0));
+      offset.left -= (p.offsetLeft + (offsetBorder ? p.clientLeft : 0));
+    }
+    return {parent: p, offset: offset, extra};
+  }
 
-    //TODO handle parents with position !== 'static'
-    //  Was originally using offsetParent and offsetTop/offsetLeft, but it turns out Firefox and Chrome differ on
-    //   handling parent borders
-
-    //tslint:disable-next-line:no-non-null-assertion
-    const pp = p || document.documentElement!;
-    const pRect = pp.getBoundingClientRect();
+  function getOffsetByClientRect(el: HTMLElement, p: HTMLElement) {
+    const pRect = p.getBoundingClientRect();
     const eRect = el.getBoundingClientRect();
 
     //NOTE: IE didn't work when I used Math.round around the whole expression.  Hopefully this does't cause issues elsewhere
-    offset.top = Math.round(eRect.top) - Math.round(pRect.top) + pp.scrollTop - pp.clientTop;
-    offset.left = Math.round(eRect.left) - Math.round(pRect.left) + pp.scrollLeft - pp.clientLeft;
-
-    return {parent: p, offset: offset, extra: extra};
+    return {
+      top: Math.round(eRect.top) - Math.round(pRect.top) + p.scrollTop - p.clientTop,
+      left: Math.round(eRect.left) - Math.round(pRect.left) + p.scrollLeft - p.clientLeft
+    };
   }
+
+  function getOffsetByOffsetParents(el: HTMLElement, p: HTMLElement, isFirefox: boolean): {top: number, left: number} {
+    if (el.offsetParent === p.offsetParent) {
+      return {
+        left: el.offsetLeft - p.offsetLeft,
+        top: el.offsetTop - p.offsetTop
+      };
+    }
+    //tslint:disable-next-line:no-non-null-assertion
+    const parentOffset = getOffsetByOffsetParents((el.offsetParent || document.documentElement!) as HTMLElement, p, isFirefox);
+    return {
+      left: el.offsetLeft + parentOffset.left,
+      top: el.offsetTop + parentOffset.top
+    };
+  }
+
   function getOffsetParents(el: HTMLElement): [ElementInfo, number][] {
     const ret: [ElementInfo, number][] = [];
 
@@ -363,8 +393,12 @@ async function getElementInfo(
   el: WebElement,
   extraConfig: ElementCaptureOptions[]
 ): Promise<[ElementInfo, CaptureOptions | undefined][]> {
+  if (savedOffsetBorder === null) {
+    savedOffsetBorder = (await browser.getCapabilities()).get('browserName') !== 'firefox';
+    console.log('savedOffsetBorder', (await browser.getCapabilities()).get('browserName'));
+  }
   //protractor doesn't map extraConfig properly as an array, so convert to rest args.
-  const ret = (await browser.executeScript<[ElementInfo, number][]>(getOffsetInfo, el, ...extraConfig.map(ec => ec.el)))
+  const ret = (await browser.executeScript<[ElementInfo, number][]>(getOffsetInfo, savedOffsetBorder, el, ...extraConfig.map(ec => ec.el)))
     .map(([p, index]): [ElementInfo, CaptureOptions | undefined] => [p, index > -1 ? extraConfig[index].extra : undefined])
   ;
   if (log) {
