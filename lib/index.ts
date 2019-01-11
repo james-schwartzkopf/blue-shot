@@ -25,8 +25,8 @@ export function setOffsetStyle(offsetStyle: 'border' | 'padding') {
 //TODO would be nice to have this compile separately so the rest could target es2017
 function getOffsetInfo(offsetBorder: boolean, targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
 
-  window.getOffsetInfo = getOffsetInfo;
-  debugger;
+  // (<any>window).getOffsetInfo = getOffsetInfo;
+  // debugger;
 
   //TODO how to detect??
   const extraParents: HTMLElement[] = [].slice.apply(arguments, [2]);
