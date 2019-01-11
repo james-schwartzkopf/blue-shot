@@ -23,7 +23,7 @@ exports.config = {
 
   //NOTE: Sauce only works with certain ports for some browsers (e.g. Edge)
   //https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQS-CanIAccessApplicationsonlocalhost?
-  baseUrl: 'http://localhost:3000/',
+  baseUrl: 'http://localhost.local:3000/',
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,
