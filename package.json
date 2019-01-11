@@ -28,6 +28,7 @@
     "build": "tsc -p tsconfig.json",
     "build-watch": "tsc -p tsconfig.json --watch",
     "e2e": "protractor e2e/protractor.conf.js",
+    "e2e-debug": "node --inspect-brk node_modules/protractor/bin/protractor e2e/protractor.conf.js",
     "e2e-travis": "protractor e2e/protractor-travis.conf.js",
     "tslint": "tslint -p tsconfig.json -p e2e/tsconfig.e2e.json",
     "e2e-update": "webdriver-manager update --gecko false",

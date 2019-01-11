@@ -24,6 +24,10 @@ export function setOffsetStyle(offsetStyle: 'border' | 'padding') {
 //To support IE, we need to be careful about the ES features we use here
 //TODO would be nice to have this compile separately so the rest could target es2017
 function getOffsetInfo(offsetBorder: boolean, targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
+
+  window.getOffsetInfo = getOffsetInfo;
+  debugger;
+
   //TODO how to detect??
   const extraParents: HTMLElement[] = [].slice.apply(arguments, [2]);
   return getOffsetParents(targetElement);
@@ -46,8 +50,23 @@ function getOffsetInfo(offsetBorder: boolean, targetElement: HTMLElement/*, ...e
     }
     return -1;
   }
+
+  //Firefox goes border box to border box, everyone(?) else goes padding box to border box
+  function offsetLeft(el: HTMLElement) {
+    return offsetBorder
+      ? (!el.offsetParent ? el.offsetLeft : el.offsetLeft - el.offsetParent.clientLeft)
+      : el.offsetLeft;
+  }
+
+  //Firefox goes border box to border box, everyone(?) else goes padding box to border box
+  function offsetTop(el: HTMLElement) {
+    return offsetBorder
+      ? (!el.offsetParent ? el.offsetTop : el.offsetTop - el.offsetParent.clientTop)
+      : el.offsetTop;
+  }
+
   function findOverflowParent(el: HTMLElement) {
-    const offset = {top: el.offsetTop, left: el.offsetLeft};
+    const offset = {top: offsetTop(el), left: offsetLeft(el)};
     let op = el.offsetParent;
     let p = el.parentElement;
     let extra = -1;
@@ -55,18 +74,25 @@ function getOffsetInfo(offsetBorder: boolean, targetElement: HTMLElement/*, ...e
       if (p === op) {
         op = p.offsetParent;
         //TODO do I need to add client top/left?
-        offset.top += p.offsetTop + (offsetBorder ? p.clientTop : 0);
-        offset.left += p.offsetLeft + (offsetBorder ? p.clientLeft : 0);
+        offset.top += offsetTop(p) + p.clientTop;
+        offset.left += offsetLeft(p) + p.clientLeft;
       }
       p = p.parentElement;
     }
 
     if (p && p !== op) {
-      offset.top -= (p.offsetTop + (offsetBorder ? p.clientTop : 0));
-      offset.left -= (p.offsetLeft + (offsetBorder ? p.clientLeft : 0));
+      offset.top -= offsetTop(p) + p.clientTop;
+      offset.left -= offsetLeft(p) + p.clientLeft;
     }
+
     return {parent: p, offset: offset, extra};
   }
+
+  //Basically getting this code to work cross browser was harder than getting offset top/left based code to work.
+  //  The issue is there appears to be no way to know for sure what actual pixel the browser will render the sub-pixel to
+  //
+  //https://johnresig.com/blog/sub-pixel-problems-in-css/
+  //https://robert.ocallahan.org/2008/01/subpixel-layout-and-rendering_22.html
 
   function getOffsetByClientRect(el: HTMLElement, p: HTMLElement) {
     const pRect = p.getBoundingClientRect();
@@ -394,8 +420,8 @@ async function getElementInfo(
   extraConfig: ElementCaptureOptions[]
 ): Promise<[ElementInfo, CaptureOptions | undefined][]> {
   if (savedOffsetBorder === null) {
-    savedOffsetBorder = (await browser.getCapabilities()).get('browserName') !== 'firefox';
-    console.log('savedOffsetBorder', (await browser.getCapabilities()).get('browserName'));
+    savedOffsetBorder = (await browser.getCapabilities()).get('browserName') === 'firefox';
+    console.log('savedOffsetBorder', savedOffsetBorder, (await browser.getCapabilities()).get('browserName'));
   }
   //protractor doesn't map extraConfig properly as an array, so convert to rest args.
   const ret = (await browser.executeScript<[ElementInfo, number][]>(getOffsetInfo, savedOffsetBorder, el, ...extraConfig.map(ec => ec.el)))
