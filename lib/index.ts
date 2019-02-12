@@ -16,20 +16,10 @@ export function enableLogger() {
   setLogger((...args: any[]) => console.log(...args));
 }
 
-let savedOffsetBorder: boolean | null = null;
-export function setOffsetStyle(offsetStyle: 'border' | 'padding') {
-  savedOffsetBorder = offsetStyle === 'border';
-}
-
 //To support IE, we need to be careful about the ES features we use here
 //TODO would be nice to have this compile separately so the rest could target es2017
-function getOffsetInfo(offsetBorder: boolean, targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
-
-  // (<any>window).getOffsetInfo = getOffsetInfo;
-  // debugger;
-
-  //TODO how to detect??
-  const extraParents: HTMLElement[] = [].slice.apply(arguments, [2]);
+function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
+  const extraParents: HTMLElement[] = [].slice.apply(arguments, [1]);
   return getOffsetParents(targetElement);
 
   function hasOverflow(el: HTMLElement) {
@@ -50,76 +40,30 @@ function getOffsetInfo(offsetBorder: boolean, targetElement: HTMLElement/*, ...e
     }
     return -1;
   }
-
-  //Firefox goes border box to border box, everyone(?) else goes padding box to border box
-  function offsetLeft(el: HTMLElement) {
-    return offsetBorder
-      ? (!el.offsetParent ? el.offsetLeft : el.offsetLeft - el.offsetParent.clientLeft)
-      : el.offsetLeft;
-  }
-
-  //Firefox goes border box to border box, everyone(?) else goes padding box to border box
-  function offsetTop(el: HTMLElement) {
-    return offsetBorder
-      ? (!el.offsetParent ? el.offsetTop : el.offsetTop - el.offsetParent.clientTop)
-      : el.offsetTop;
-  }
-
   function findOverflowParent(el: HTMLElement) {
-    const offset = {top: offsetTop(el), left: offsetLeft(el)};
-    let op = el.offsetParent;
+    const offset = {top: el.offsetTop, left: el.offsetLeft};
     let p = el.parentElement;
     let extra = -1;
     while (p  && !((extra = findIndex(extraParents, e => e === p)) > -1 || hasOverflow(p))) {
-      if (p === op) {
-        op = p.offsetParent;
-        //TODO do I need to add client top/left?
-        offset.top += offsetTop(p) + p.clientTop;
-        offset.left += offsetLeft(p) + p.clientLeft;
-      }
       p = p.parentElement;
     }
 
-    if (p && p !== op) {
-      offset.top -= offsetTop(p) + p.clientTop;
-      offset.left -= offsetLeft(p) + p.clientLeft;
-    }
 
-    return {parent: p, offset: offset, extra};
-  }
+    //TODO handle parents with position !== 'static'
+    //  Was originally using offsetParent and offsetTop/offsetLeft, but it turns out Firefox and Chrome differ on
+    //   handling parent borders
 
-  //Basically getting this code to work cross browser was harder than getting offset top/left based code to work.
-  //  The issue is there appears to be no way to know for sure what actual pixel the browser will render the sub-pixel to
-  //
-  //https://johnresig.com/blog/sub-pixel-problems-in-css/
-  //https://robert.ocallahan.org/2008/01/subpixel-layout-and-rendering_22.html
-
-  function getOffsetByClientRect(el: HTMLElement, p: HTMLElement) {
-    const pRect = p.getBoundingClientRect();
+    //tslint:disable-next-line:no-non-null-assertion
+    const pp = p || document.documentElement!;
+    const pRect = pp.getBoundingClientRect();
     const eRect = el.getBoundingClientRect();
 
     //NOTE: IE didn't work when I used Math.round around the whole expression.  Hopefully this does't cause issues elsewhere
-    return {
-      top: Math.round(eRect.top) - Math.round(pRect.top) + p.scrollTop - p.clientTop,
-      left: Math.round(eRect.left) - Math.round(pRect.left) + p.scrollLeft - p.clientLeft
-    };
-  }
+    offset.top = Math.round(eRect.top) - Math.round(pRect.top) + pp.scrollTop - pp.clientTop;
+    offset.left = Math.round(eRect.left) - Math.round(pRect.left) + pp.scrollLeft - pp.clientLeft;
 
-  function getOffsetByOffsetParents(el: HTMLElement, p: HTMLElement, isFirefox: boolean): {top: number, left: number} {
-    if (el.offsetParent === p.offsetParent) {
-      return {
-        left: el.offsetLeft - p.offsetLeft,
-        top: el.offsetTop - p.offsetTop
-      };
-    }
-    //tslint:disable-next-line:no-non-null-assertion
-    const parentOffset = getOffsetByOffsetParents((el.offsetParent || document.documentElement!) as HTMLElement, p, isFirefox);
-    return {
-      left: el.offsetLeft + parentOffset.left,
-      top: el.offsetTop + parentOffset.top
-    };
+    return {parent: p, offset: offset, extra: extra};
   }
-
   function getOffsetParents(el: HTMLElement): [ElementInfo, number][] {
     const ret: [ElementInfo, number][] = [];
 
@@ -351,9 +295,7 @@ function adjustForClip(origin: Point, r: Rect, clip: Rect): [Point, Rect] {
 function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
   async function captureScreenRegion(r: Rect, dest: PNG, destPoint: Point): Promise<void> {
     const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));
-    if (log) {
-      log('captureScreenRegion', r, destPoint);
-    }
+
     PNG.bitblt(
       screenPng,
       dest,
@@ -419,12 +361,8 @@ async function getElementInfo(
   el: WebElement,
   extraConfig: ElementCaptureOptions[]
 ): Promise<[ElementInfo, CaptureOptions | undefined][]> {
-  if (savedOffsetBorder === null) {
-    savedOffsetBorder = (await browser.getCapabilities()).get('browserName') === 'firefox';
-    console.log('savedOffsetBorder', savedOffsetBorder, (await browser.getCapabilities()).get('browserName'));
-  }
   //protractor doesn't map extraConfig properly as an array, so convert to rest args.
-  const ret = (await browser.executeScript<[ElementInfo, number][]>(getOffsetInfo, savedOffsetBorder, el, ...extraConfig.map(ec => ec.el)))
+  const ret = (await browser.executeScript<[ElementInfo, number][]>(getOffsetInfo, el, ...extraConfig.map(ec => ec.el)))
     .map(([p, index]): [ElementInfo, CaptureOptions | undefined] => [p, index > -1 ? extraConfig[index].extra : undefined])
   ;
   if (log) {
