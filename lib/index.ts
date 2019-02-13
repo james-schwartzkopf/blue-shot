@@ -2,7 +2,6 @@ import { PNG } from 'pngjs';
 import { WebDriver, WebElement } from 'selenium-webdriver';
 
 let log: ((...args: any[]) => void) | undefined; //
-
 export function setLogger(logger: ((...args: any[]) => void) | undefined) {
   log = logger;
 }
@@ -16,6 +15,10 @@ export function enableLogger() {
   setLogger((...args: any[]) => console.log(...args));
 }
 
+let pauseBeforeScreenshot: number | undefined;
+export function setPauseBeforeScreenshot(pauseMillies?: number) {
+  pauseBeforeScreenshot = pauseMillies;
+}
 //To support IE, we need to be careful about the ES features we use here
 //TODO would be nice to have this compile separately so the rest could target es2017
 function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
@@ -211,9 +214,9 @@ function buildCapture(
       if (view.top > (remainingH.top - viewMargins.topHeight) || bottom(remainingH) > (bottom(view) - viewMargins.bottomHeight)) {
         const top = Math.min(maxScrollTop, remainingH.top - viewMargins.topHeight);
 
-        view.top = await browser.executeScript<number>((el: HTMLElement, t: number) => {
+        view.top = await browser.executeScript<number>((el: Element, t: number) => {
           if (el === document.documentElement) {
-            el = document.scrollingElement;
+            el = document.scrollingElement || el;
           }
           el.scrollTop = t;
           return el.scrollTop;
@@ -234,9 +237,9 @@ function buildCapture(
       while (remainingV) {
         if (view.left > (remainingV.left - viewMargins.leftWidth) || right(remainingV) > (right(view) - viewMargins.rightWidth)) {
           const left = Math.min(maxScrollLeft, remainingV.left - viewMargins.leftWidth);
-          view.left = await browser.executeScript<number>((el: HTMLElement, l: number) => {
+          view.left = await browser.executeScript<number>((el: Element, l: number) => {
             if (el === document.documentElement) {
-              el = document.scrollingElement;
+              el = document.scrollingElement || el;
             }
             el.scrollLeft = l;
             return el.scrollLeft;
@@ -250,7 +253,6 @@ function buildCapture(
         if (log) {
           log('v[t, r] v vm r', elInfo.description, targetV, remainingV, view, viewMargins, r);
         }
-        await new Promise(resolve => setTimeout(resolve, 1000));
         await captureViewPort(translate(translate(translate(targetV, elInfo.offset), view, -1), elInfo.client), dest, nextPoint);
         nextPoint.x += targetV.width;
       }
@@ -301,6 +303,9 @@ function adjustForClip(origin: Point, r: Rect, clip: Rect): [Point, Rect] {
 
 function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
   async function captureScreenRegion(r: Rect, dest: PNG, destPoint: Point): Promise<void> {
+    if (pauseBeforeScreenshot !== undefined) {
+      await new Promise(resolve => setTimeout(resolve, pauseBeforeScreenshot));
+    }
     const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));
 
     PNG.bitblt(
