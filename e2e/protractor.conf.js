@@ -44,7 +44,7 @@ exports.config = {
     // );
     server.listen(3000);
   },
-  onPrepare() {
+  async onPrepare() {
     const tsConfig = require('path').join(__dirname, './tsconfig.e2e.json');
     require('ts-node').register({
       project: tsConfig
@@ -68,8 +68,14 @@ exports.config = {
     //No Angular
     protractor.browser.waitForAngularEnabled(false);
 
-    const { enableLogger } = require('blue-shot');
+    const { enableLogger, setPauseBeforeScreenshot } = require('blue-shot');
     enableLogger();
+
+    //Pause so Safari has time to hide it's scroll bars.
+    const browserName = (await browser.getProcessedConfig()).capabilities.browserName;
+    if (browserName === 'safari') {
+      setPauseBeforeScreenshot(1000);
+    }
 
     const { setViewportSize } = require('./src/utils');
 
