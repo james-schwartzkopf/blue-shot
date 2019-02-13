@@ -250,6 +250,7 @@ function buildCapture(
         if (log) {
           log('v[t, r] v vm r', elInfo.description, targetV, remainingV, view, viewMargins, r);
         }
+        await new Promise(resolve => setTimeout(resolve, 1000));
         await captureViewPort(translate(translate(translate(targetV, elInfo.offset), view, -1), elInfo.client), dest, nextPoint);
         nextPoint.x += targetV.width;
       }
