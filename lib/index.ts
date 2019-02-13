@@ -212,6 +212,9 @@ function buildCapture(
         const top = Math.min(maxScrollTop, remainingH.top - viewMargins.topHeight);
 
         view.top = await browser.executeScript<number>((el: HTMLElement, t: number) => {
+          if (el === document.documentElement) {
+            el = document.scrollingElement;
+          }
           el.scrollTop = t;
           return el.scrollTop;
         }, elInfo.el, top);
