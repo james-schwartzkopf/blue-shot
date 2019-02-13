@@ -236,7 +236,7 @@ function buildCapture(
             return el.scrollLeft;
           }, elInfo.el, left);
           if (view.left !== left) {
-            //TODO throw new Error(`Error setting scrollLeft for ${elInfo.description} expected ${left} got ${view.left}`);
+            //TODO  throw new Error(`Error setting scrollLeft for ${elInfo.description} expected ${left} got ${view.left}`);
           }
         }
 
