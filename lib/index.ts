@@ -235,6 +235,9 @@ function buildCapture(
         if (view.left > (remainingV.left - viewMargins.leftWidth) || right(remainingV) > (right(view) - viewMargins.rightWidth)) {
           const left = Math.min(maxScrollLeft, remainingV.left - viewMargins.leftWidth);
           view.left = await browser.executeScript<number>((el: HTMLElement, l: number) => {
+            if (el === document.documentElement) {
+              el = document.scrollingElement;
+            }
             el.scrollLeft = l;
             return el.scrollLeft;
           }, elInfo.el, left);
