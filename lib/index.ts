@@ -217,7 +217,7 @@ function buildCapture(
         }, elInfo.el, top);
 
         if (view.top !== top) {
-          throw new Error(`Error setting scrollTop for ${elInfo.description} expected ${top} got ${view.top}`);
+          //TODO throw new Error(`Error setting scrollTop for ${elInfo.description} expected ${top} got ${view.top}`);
         }
       }
 
@@ -236,7 +236,7 @@ function buildCapture(
             return el.scrollLeft;
           }, elInfo.el, left);
           if (view.left !== left) {
-            throw new Error(`Error setting scrollTop for ${elInfo.description} expected ${left} got ${view.left}`);
+            //TODO throw new Error(`Error setting scrollLeft for ${elInfo.description} expected ${left} got ${view.left}`);
           }
         }
 
