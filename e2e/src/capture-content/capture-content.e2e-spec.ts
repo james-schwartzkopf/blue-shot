@@ -32,7 +32,7 @@ describe('captureContent', () => {
     await browser.get(`${path}.html`);
     const png = await captureContent(
       browser,
-      element(By.css('body')),
+      element(By.css('html')),
       clipView(element(By.css('html')), {topHeight: 20, leftWidth: 20, bottomHeight: 40, rightWidth: 40})
     );
     expect(png).toMatchBaseline(`${path}.png`);
