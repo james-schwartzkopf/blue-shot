@@ -51,8 +51,8 @@ describe('captureContent', () => {
             visibility: hidden !important;
             width: 0;
             height: 0;
-            */
             color: rgba(0, 0, 0, 0) !important;
+            */
             background-color: rgba(0, 0, 0, 0) !important;
           }
           #scrolling-parent {
