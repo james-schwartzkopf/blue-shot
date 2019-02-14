@@ -15,9 +15,11 @@ export function enableLogger() {
   setLogger((...args: any[]) => console.log(...args));
 }
 
-let pauseBeforeScreenshot: number | undefined;
-export function setPauseBeforeScreenshot(pauseMillies?: number) {
-  pauseBeforeScreenshot = pauseMillies;
+let pauseBeforeScreenshot: number | false = false;
+export function setPauseBeforeScreenshot(pause: number | true | false): number | false {
+  const was = pauseBeforeScreenshot;
+  pauseBeforeScreenshot = pause === true ? 1000 : pause;
+  return was;
 }
 //To support IE, we need to be careful about the ES features we use here
 //TODO would be nice to have this compile separately so the rest could target es2017
@@ -303,7 +305,7 @@ function adjustForClip(origin: Point, r: Rect, clip: Rect): [Point, Rect] {
 
 function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
   async function captureScreenRegion(r: Rect, dest: PNG, destPoint: Point): Promise<void> {
-    if (pauseBeforeScreenshot !== undefined) {
+    if (pauseBeforeScreenshot !== false) {
       await new Promise(resolve => setTimeout(resolve, pauseBeforeScreenshot));
     }
     const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));

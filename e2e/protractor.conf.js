@@ -74,7 +74,7 @@ exports.config = {
     //Pause so Safari has time to hide it's scroll bars.
     const browserName = (await browser.getProcessedConfig()).capabilities.browserName;
     if (browserName === 'safari') {
-      // setPauseBeforeScreenshot(1000);
+      // setPauseBeforeScreenshot(true);
     }
 
     const { setViewportSize } = require('./src/utils');
