@@ -28,12 +28,14 @@ describe('captureContent', () => {
 
     describe('scrolling with safari', () => {
       let was: false | number;
-      beforeEach(() => {
+      beforeAll(() => {
         was = setPauseBeforeScreenshot(false);
+        console.error('before was', was);
       });
 
-      afterEach(() => {
-        setPauseBeforeScreenshot(was);
+      afterAll(() => {
+        was = setPauseBeforeScreenshot(was);
+        console.error('after was', was);
       });
 
       it('image does not have scrollbars visible in image', async () => {
