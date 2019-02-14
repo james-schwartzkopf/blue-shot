@@ -195,6 +195,43 @@ const png = await captureElement(
 );
 ````
 
+#### Utility/Compatibility
+
+##### Logging
+
+```typescript
+function setLogger(logger: ((...args: any[]) => void) | undefined);
+function enableLogger()
+function clearLogger()
+```
+
+Sets the function used for internal blue-shot logging.  Setting undefined disables logging and is
+the same as calling clearLogger().  enableLogger() sets a logging function that uses console.log().
+
+NOTE: Logging can and will change without warning.  It can be useful for debugging issues, but your code
+should not depend on it in anyway.
+
+##### setPauseBeforeScreenshot
+
+This function exist mainly to work around the issue of scrollbars that appear in the document/elements client area and 
+disappear after a short delay.  It allows setting a timeout before each screenshot is taken.
+
+See the Safari section under [Browser Support](#browser-support) for more information.
+
+```typescript
+function setPauseBeforeScreenshot(pause: number | true | false): number | false;
+```
+
+You can pass the function:
+a) false - To disable pausing
+b) true - To set a 1 second pause before taking screenshots
+c) A number to indicate how many milliseconds to pause before taking a screenshot.
+
+The function returns the previous value.
+
+This method does not require making any changes to your CSS or HTML, but will obviously cause your test to run slower.
+
+
 ## Common Tasks Not Covered
 
 #### Comparing images
@@ -308,9 +345,59 @@ use ```yarn run serve-e2e-tests``` to view the test html outside of the e2e test
 
 ## Browser Support
 
-Currently Blue Shot has been tested against Chrome, Firefox, and IE 11.  I intend to support all Evergreen browsers, IE 11 will
+Currently Blue Shot has been tested against Chrome, Firefox, Safari* and IE 11.  I intend to support all Evergreen browsers, IE 11 will
 be supported on a "Best Effort" basis.  I support IE as part of my day job, I understand how important good e2e test are for IE, but
 I also understand just how much work that can be.
+
+### Chrome
+
+Currently no known issues with Chrome.
+
+### Firefox 
+
+Currently no known issues with Firefox.
+
+## IE11
+
+Currently no known issues with IE11, however as mentioned above IE will be supported on a "Best Effort" basis.
+
+### Safari
+
+Safari uses scrollbars that don't have a width, and appear/disappear from the elements client area.  Sometimes
+these scrollbars are captured in screenshots.  The scrollbars do disappear after a brief time of no scrolling.  
+In fact, besides just cluttering the images, the scrollbars are troublesome because they are inconsistent about 
+whether or not they will appear in a screenshot due to timing.
+
+There are two known solutions to this issue:
+
+1) CSS
+
+    ```CSS
+    *::-webkit-scrollbar {
+      -webkit-appearance: none;
+    }
+    ```
+    This CSS will hide the scrollbars preventing them from showing in the image, but it does require adding
+    the CSS to your e2e environment without hiding the scrollbars in other environments.
+  
+2) Timing
+    
+    To add a pause before taking screenshots you can use the setPauseBeforeScreenshot function.  This will give the
+    scrollbars time to disappear.
+    
+    ```typescript
+    function setPauseBeforeScreenshot(pause: number | true | false): number | false;
+    ```
+    
+    You can pass the function:
+    a) false - To disable pausing
+    b) true - To set a 1 second pause before taking screenshots
+    c) A number to indicate how many milliseconds to pause before taking a screenshot.
+
+    The function returns the previous value.
+
+    This method does not require making any changes to your CSS or HTML, but will obviously cause your test to run slower.
+
 
 ## Big Thanks
 

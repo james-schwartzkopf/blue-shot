@@ -19,10 +19,10 @@ exports.config = {
     // {'browserName': 'chrome'},
 
     // //Note: If we don't disable full page screenshots, IE will reset scroll and dimensions in our screenshots
-    // {'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
-    // {'browserName': 'firefox'},
+    {'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
+    {'browserName': 'firefox'},
     {'browserName': 'safari'},
-    // {'browserName': 'MicrosoftEdge'},
+    {'browserName': 'MicrosoftEdge'},
   ],
 
   //NOTE: Sauce only works with certain ports for some browsers (e.g. Edge)
@@ -74,7 +74,7 @@ exports.config = {
     //Pause so Safari has time to hide it's scroll bars.
     const browserName = (await browser.getProcessedConfig()).capabilities.browserName;
     if (browserName === 'safari') {
-      // setPauseBeforeScreenshot(true);
+      setPauseBeforeScreenshot(true);
     }
 
     const { setViewportSize } = require('./src/utils');
