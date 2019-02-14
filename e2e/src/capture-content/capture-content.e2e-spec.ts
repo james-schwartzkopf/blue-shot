@@ -25,14 +25,14 @@ describe('captureContent', () => {
 
     let was: false | number;
     beforeEach(() => {
-      was = setPauseBeforeScreenshot(false); //TODO better name to clear
+      was = setPauseBeforeScreenshot(false);
     });
 
     afterEach(() => {
       setPauseBeforeScreenshot(was);
     });
 
-    fit('image does not have scrollbars visible in image', async () => {
+    it('image does not have scrollbars visible in image', async () => {
       //Only run on safari
       //TODO would be better to skip the whole describe in other browsers
       const browserName = (await browser.getProcessedConfig()).capabilities.browserName;

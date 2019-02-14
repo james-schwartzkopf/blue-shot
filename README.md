@@ -399,6 +399,18 @@ There are two known solutions to this issue:
     This method does not require making any changes to your CSS or HTML, but will obviously cause your test to run slower.
 
 
+## Edge (Currently Unsupported)
+
+I had issues supporting Edge.  Running in Sauce Labs several test fail with a 1 pixel error.  This is most likely an issue
+with sub-pixel rendering.  However when I got the Edge driver running on my local environment (after much effort), I got a 
+completely different set of incorrect images and failed tests.
+
+Given the news that Microsoft is abandoning the current EdgeHTML engine for Chromes Blink engine, I am reluctant to put in
+the effort to fix this.  I willing to accept pull request, especially if they solve the issue in all environments.
+
+* https://blogs.windows.com/windowsexperience/2018/12/06/microsoft-edge-making-the-web-better-through-more-open-source-collaboration/#b3uKRwXkzflsRJzV.97
+
+
 ## Big Thanks
 
 Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs][homepage]
