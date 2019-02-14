@@ -76,6 +76,7 @@ exports.config = {
 
     const browserName = (await browser.getProcessedConfig()).capabilities.browserName;
     setBrowserName(browserName);
+    console.log('huh??');
 
     //Pause so Safari has time to hide it's scroll bars.
     if (browserName === 'safari') {

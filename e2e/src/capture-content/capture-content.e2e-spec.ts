@@ -1,6 +1,5 @@
 import { browser, By, element } from 'protractor';
 import { captureContent, ClipMargins, clipView, setPauseBeforeScreenshot } from 'blue-shot';
-import { afterEach, beforeEach } from 'selenium-webdriver/testing';
 import { getBrowserName } from '../utils';
 
 describe('captureContent', () => {
@@ -17,6 +16,7 @@ describe('captureContent', () => {
     expect(png).toMatchBaseline(`${path}.png`);
   });
 
+  console.error('is it safari??', getBrowserName());
   if (getBrowserName() === 'safari') {
 
     //First even without the fixes, these test would sometimes pass.  It all depends on timing.
