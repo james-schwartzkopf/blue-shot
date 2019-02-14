@@ -16,11 +16,11 @@ exports.config = {
   // directConnect: true,
 
   multiCapabilities: [
-    {'browserName': 'chrome'},
+    // {'browserName': 'chrome'},
 
     // //Note: If we don't disable full page screenshots, IE will reset scroll and dimensions in our screenshots
-    {'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
-    {'browserName': 'firefox'},
+    // {'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
+    // {'browserName': 'firefox'},
     {'browserName': 'safari'},
     // {'browserName': 'MicrosoftEdge'},
   ],
@@ -74,7 +74,7 @@ exports.config = {
     //Pause so Safari has time to hide it's scroll bars.
     const browserName = (await browser.getProcessedConfig()).capabilities.browserName;
     if (browserName === 'safari') {
-      setPauseBeforeScreenshot(1000);
+      // setPauseBeforeScreenshot(1000);
     }
 
     const { setViewportSize } = require('./src/utils');
