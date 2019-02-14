@@ -50,6 +50,8 @@ describe('captureContent', () => {
             background-color: rgba(0, 0, 0, 0) !important;
             opacity: 0 !important;
             visibility: hidden !important;
+            width: 0;
+            height: 0;
           }
           #scrolling-parent {
             background-color: white;
