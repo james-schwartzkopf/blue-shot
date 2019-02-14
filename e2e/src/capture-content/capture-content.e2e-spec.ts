@@ -47,6 +47,9 @@ describe('captureContent', () => {
             -webkit-appearance: none;
             display: none;
             color: #FFFFFF00;
+            background-color: #FFFFFF00;
+            opacity: 0;
+            visibility: hidden;
           }
         `;
 
