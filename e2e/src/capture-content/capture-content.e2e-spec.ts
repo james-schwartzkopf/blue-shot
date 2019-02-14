@@ -44,17 +44,19 @@ describe('captureContent', () => {
         await browser.executeScript(() => {
           const css = `
           *::-webkit-scrollbar, *::-webkit-scrollbar-thumb {
+            /*
             -webkit-appearance: none !important;
             display: none !important;
             color: rgba(0, 0, 0, 0) !important;
             background-color: rgba(0, 0, 0, 0) !important;
             opacity: 0 !important;
             visibility: hidden !important;
+            */
             width: 0;
             height: 0;
           }
           #scrolling-parent {
-            background-color: white;
+           // background-color: white;
           }
         `;
 
