@@ -40,7 +40,7 @@ describe('captureContent', () => {
         return;
       }
 
-      const path = 'capture-content/scrolling-safari';
+      const path = 'capture-content/scrolling';
       await browser.get(`${path}.html`);
       await browser.executeScript(() => {
         const css = `
@@ -58,7 +58,7 @@ describe('captureContent', () => {
         document.head!.appendChild(style);
       });
       const png = await captureContent(browser, element(By.id('scrolling-parent')));
-      expect(png).toMatchBaseline(`${path}.png`);
+      expect(png).toMatchBaseline(`${path}-safari.png`);
     });
   });
   it('with clipping', async () => {
