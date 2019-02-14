@@ -58,9 +58,12 @@ exports.config = {
       }
     });
 
+    const { enableLogger, setPauseBeforeScreenshot } = require('blue-shot');
+    const { setViewportSize, setBrowserName, toMatchBaseline } = require('./src/utils');
+
     beforeAll(() => {
       jasmine.addMatchers({
-        toMatchBaseline: require('./src/utils').toMatchBaseline
+        toMatchBaseline
       });
     });
 
@@ -68,16 +71,17 @@ exports.config = {
     //No Angular
     protractor.browser.waitForAngularEnabled(false);
 
-    const { enableLogger, setPauseBeforeScreenshot } = require('blue-shot');
+
     enableLogger();
 
-    //Pause so Safari has time to hide it's scroll bars.
     const browserName = (await browser.getProcessedConfig()).capabilities.browserName;
+    setBrowserName(browserName);
+
+    //Pause so Safari has time to hide it's scroll bars.
     if (browserName === 'safari') {
       setPauseBeforeScreenshot(true);
     }
 
-    const { setViewportSize } = require('./src/utils');
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
     return setViewportSize(800, 600);

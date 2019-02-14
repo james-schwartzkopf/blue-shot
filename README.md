@@ -351,15 +351,15 @@ I also understand just how much work that can be.
 
 ### Chrome
 
-Currently no known issues with Chrome.
+Currently no known issues specific to Chrome.
 
 ### Firefox 
 
-Currently no known issues with Firefox.
+Currently no known issues specific to Firefox.
 
 ## IE11
 
-Currently no known issues with IE11, however as mentioned above IE will be supported on a "Best Effort" basis.
+Currently no known issues specific to IE11, however as mentioned above IE will be supported on a "Best Effort" basis.
 
 ### Safari
 
@@ -405,7 +405,7 @@ I had issues supporting Edge.  Running in Sauce Labs several test fail with a 1 
 with sub-pixel rendering.  However when I got the Edge driver running on my local environment (after much effort), I got a 
 completely different set of incorrect images and failed tests.
 
-Given the news that Microsoft is abandoning the current EdgeHTML engine for Chromes Blink engine, I am reluctant to put in
+Given the news that Microsoft is abandoning the current EdgeHTML engine for the Chromes Blink engine, I am reluctant to put in
 the effort to fix this.  I willing to accept pull request, especially if they solve the issue in all environments.
 
 * https://blogs.windows.com/windowsexperience/2018/12/06/microsoft-edge-making-the-web-better-through-more-open-source-collaboration/#b3uKRwXkzflsRJzV.97

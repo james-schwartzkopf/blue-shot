@@ -1,6 +1,7 @@
 import { browser, By, element } from 'protractor';
 import { captureContent, ClipMargins, clipView, setPauseBeforeScreenshot } from 'blue-shot';
 import { afterEach, beforeEach } from 'selenium-webdriver/testing';
+import { getBrowserName } from '../utils';
 
 describe('captureContent', () => {
   it('non scrolling', async () => {
@@ -15,7 +16,9 @@ describe('captureContent', () => {
     const png = await captureContent(browser, element(By.id('scrolling-parent')));
     expect(png).toMatchBaseline(`${path}.png`);
   });
-  describe('scrolling with safari', () => {
+
+  if (getBrowserName() === 'safari') {
+
     //First even without the fixes, these test would sometimes pass.  It all depends on timing.
     //
     //The issue is Safari uses scrollbars that don't have a width, and appear/disappear from the elements client area.
@@ -23,44 +26,39 @@ describe('captureContent', () => {
     //  an alternative from the README.md (hide the scrollbars)
 
 
-    let was: false | number;
-    beforeEach(() => {
-      was = setPauseBeforeScreenshot(false);
-    });
+    describe('scrolling with safari', () => {
+      let was: false | number;
+      beforeEach(() => {
+        was = setPauseBeforeScreenshot(false);
+      });
 
-    afterEach(() => {
-      setPauseBeforeScreenshot(was);
-    });
+      afterEach(() => {
+        setPauseBeforeScreenshot(was);
+      });
 
-    it('image does not have scrollbars visible in image', async () => {
-      //Only run on safari
-      //TODO would be better to skip the whole describe in other browsers
-      const browserName = (await browser.getProcessedConfig()).capabilities.browserName;
-      if (browserName.toLocaleLowerCase() !== 'safari') {
-        return;
-      }
-
-      const path = 'capture-content/scrolling';
-      await browser.get(`${path}.html`);
-      await browser.executeScript(() => {
-        const css = `
+      it('image does not have scrollbars visible in image', async () => {
+        const path = 'capture-content/scrolling';
+        await browser.get(`${path}.html`);
+        await browser.executeScript(() => {
+          const css = `
           *::-webkit-scrollbar {
             -webkit-appearance: none;
           }
         `;
 
-        const style = document.createElement('style');
+          const style = document.createElement('style');
 
-        style.type = 'text/css';
-        style.appendChild(document.createTextNode(css));
+          style.type = 'text/css';
+          style.appendChild(document.createTextNode(css));
 
-        //tslint:disable-next-line:no-non-null-assertion
-        document.head!.appendChild(style);
+          //tslint:disable-next-line:no-non-null-assertion
+          document.head!.appendChild(style);
+        });
+        const png = await captureContent(browser, element(By.id('scrolling-parent')));
+        expect(png).toMatchBaseline(`${path}-safari.png`);
       });
-      const png = await captureContent(browser, element(By.id('scrolling-parent')));
-      expect(png).toMatchBaseline(`${path}-safari.png`);
     });
-  });
+  }
   it('with clipping', async () => {
     const path = 'capture-content/clipped';
     await browser.get(`${path}.html`);

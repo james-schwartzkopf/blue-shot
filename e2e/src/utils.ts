@@ -5,11 +5,21 @@ import mkdirp = require('mkdirp');
 import { browser } from 'protractor';
 import { Rect } from 'blue-shot';
 
+let browserName = 'unknown';
+
+export function setBrowserName(name: string) {
+  browserName = name.toLowerCase().replace(/\s+/g, '-');
+}
+
+export function getBrowserName() {
+  return browserName;
+}
+
 function verifyImage(filename: string, png: PNG) {
   const baseline = readPNG(path.join(__dirname, filename));
   const matched = !!baseline  && baseline.data.equals(png.data);
   if (!matched) {
-    const actualFilename = path.join(__dirname, '../../.test-results', filename);
+    const actualFilename = path.join(__dirname, `../../.test-results/${browserName}`, filename);
     mkdirp.sync(path.dirname(actualFilename));
     fs.writeFileSync(actualFilename, PNG.sync.write(png));
   }

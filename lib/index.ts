@@ -306,6 +306,7 @@ function adjustForClip(origin: Point, r: Rect, clip: Rect): [Point, Rect] {
 function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
   async function captureScreenRegion(r: Rect, dest: PNG, destPoint: Point): Promise<void> {
     if (pauseBeforeScreenshot !== false) {
+      if (log) { log('pauseBeforeScreenshot', pauseBeforeScreenshot); }
       //I'm really confused why this cast is needed
       await new Promise(resolve => setTimeout(resolve, pauseBeforeScreenshot as number));
     }
