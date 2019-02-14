@@ -43,9 +43,10 @@ describe('captureContent', () => {
         await browser.get(`${path}.html`);
         await browser.executeScript(() => {
           const css = `
-          ::-webkit-scrollbar {
+          ::-webkit-scrollbar, ::-webkit-scrollbar-thumb {
             -webkit-appearance: none;
             display: none;
+            color: #FFFFFF00;
           }
         `;
 
