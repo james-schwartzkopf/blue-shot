@@ -45,7 +45,7 @@ describe('captureContent', () => {
       await browser.executeScript(() => {
         const css = `
           *::-webkit-scrollbar {
-            /*-webkit-appearance: none;*/
+            -webkit-appearance: none;
           }
         `;
 
