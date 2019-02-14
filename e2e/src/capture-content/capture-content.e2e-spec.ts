@@ -38,11 +38,12 @@ describe('captureContent', () => {
         console.error('after was', was);
       });
 
-      it('image does not have scrollbars visible in image', async () => {
-        const path = 'capture-content/scrolling';
-        await browser.get(`${path}.html`);
-        await browser.executeScript(() => {
-          const css = `
+      for (let i = 0; i < 20; i++) {
+        fit(`image does not have scrollbars visible in image ${i}`, async () => {
+          const path = 'capture-content/scrolling';
+          await browser.get(`${path}.html`);
+          await browser.executeScript(() => {
+            const css = `
           *::-webkit-scrollbar, *::-webkit-scrollbar-thumb {
             /*
             -webkit-appearance: none !important;
@@ -60,17 +61,18 @@ describe('captureContent', () => {
           }
         `;
 
-          const style = document.createElement('style');
+            const style = document.createElement('style');
 
-          style.type = 'text/css';
-          style.appendChild(document.createTextNode(css));
+            style.type = 'text/css';
+            style.appendChild(document.createTextNode(css));
 
-          //tslint:disable-next-line:no-non-null-assertion
-          document.head!.appendChild(style);
+            //tslint:disable-next-line:no-non-null-assertion
+            document.head!.appendChild(style);
+          });
+          const png = await captureContent(browser, element(By.id('scrolling-parent')));
+          expect(png).toMatchBaseline(`${path}-safari.png`);
         });
-        const png = await captureContent(browser, element(By.id('scrolling-parent')));
-        expect(png).toMatchBaseline(`${path}-safari.png`);
-      });
+      }
     });
   }
   it('with clipping', async () => {
