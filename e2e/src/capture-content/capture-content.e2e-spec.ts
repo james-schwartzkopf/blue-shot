@@ -15,66 +15,6 @@ describe('captureContent', () => {
     const png = await captureContent(browser, element(By.id('scrolling-parent')));
     expect(png).toMatchBaseline(`${path}.png`);
   });
-
-  console.error('is it safari??', getBrowserName());
-  if (getBrowserName() === 'safari') {
-
-    //First even without the fixes, these test would sometimes pass.  It all depends on timing.
-    //
-    //The issue is Safari uses scrollbars that don't have a width, and appear/disappear from the elements client area.
-    //  The solution I've chosen as the "main" fix for these test is to pause before all screen shots, but we need to test
-    //  an alternative from the README.md (hide the scrollbars)
-
-
-    describe('scrolling with safari', () => {
-      let was: false | number;
-      beforeAll(() => {
-        was = setPauseBeforeScreenshot(false);
-        console.error('before was', was);
-      });
-
-      afterAll(() => {
-        was = setPauseBeforeScreenshot(was);
-        console.error('after was', was);
-      });
-
-      for (let i = 0; i < 20; i++) {
-        fit(`image does not have scrollbars visible in image ${i}`, async () => {
-          const path = 'capture-content/scrolling';
-          await browser.get(`${path}.html`);
-          await browser.executeScript(() => {
-            const css = `
-          *::-webkit-scrollbar, *::-webkit-scrollbar-thumb {
-            /*
-            -webkit-appearance: none !important;
-            display: none !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-            width: 0;
-            height: 0;
-            */
-            background-color: rgba(0, 0, 0, 0) !important;
-            color: rgba(0, 0, 0, 0) !important;
-          }
-          #scrolling-parent {
-           // background-color: white;
-          }
-        `;
-
-            const style = document.createElement('style');
-
-            style.type = 'text/css';
-            style.appendChild(document.createTextNode(css));
-
-            //tslint:disable-next-line:no-non-null-assertion
-            document.head!.appendChild(style);
-          });
-          const png = await captureContent(browser, element(By.id('scrolling-parent')));
-          expect(png).toMatchBaseline(`${path}-safari.png`);
-        });
-      }
-    });
-  }
   it('with clipping', async () => {
     const path = 'capture-content/clipped';
     await browser.get(`${path}.html`);

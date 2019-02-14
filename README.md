@@ -216,20 +216,28 @@ should not depend on it in anyway.
 This function exist mainly to work around the issue of scrollbars that appear in the document/elements client area and 
 disappear after a short delay.  It allows setting a timeout before each screenshot is taken.
 
-See the Safari section under [Browser Support](#browser-support) for more information.
-
 ```typescript
 function setPauseBeforeScreenshot(pause: number | true | false): number | false;
 ```
 
 You can pass the function:
-a) false - To disable pausing
-b) true - To set a 1 second pause before taking screenshots
-c) A number to indicate how many milliseconds to pause before taking a screenshot.
+1) false - To disable pausing (default)
+2) true - To set a 1 second pause before taking screenshots
+3) A number to indicate how many milliseconds to pause before taking a screenshot.
 
 The function returns the previous value.
 
 This method does not require making any changes to your CSS or HTML, but will obviously cause your test to run slower.
+
+Typically you would call this function from the onPrepare of your protractor.conf.js:
+```typescript
+    const { setPauseBeforeScreenshot } = require('blue-shot');
+    const browserName = (await browser.getProcessedConfig()).capabilities.browserName;
+    //Pause so Safari has time to hide it's scroll bars.
+    if (browserName.toLowerCase() === 'safari') {
+      setPauseBeforeScreenshot(true);
+    }
+```
 
 
 ## Common Tasks Not Covered
@@ -368,35 +376,28 @@ these scrollbars are captured in screenshots.  The scrollbars do disappear after
 In fact, besides just cluttering the images, the scrollbars are troublesome because they are inconsistent about 
 whether or not they will appear in a screenshot due to timing.
 
-There are two known solutions to this issue:
+I tried various solutions for hiding the scroll bars through CSS, but did not find anything reliable that would
+not change how the screenshots looked or how blue-shot scrolled the element.
 
-1) CSS
+These CSS properties, and many variations had no affect on the scrollbar:
+```CSS
+*::-webkit-scrollbar, *::-webkit-scrollbar-thumb {
+  -webkit-appearance: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  background-color: rgba(0, 0, 0, 0) !important;
+  color: rgba(0, 0, 0, 0) !important;
+}
+```
 
-    ```CSS
-    *::-webkit-scrollbar {
-      -webkit-appearance: none;
-    }
-    ```
-    This CSS will hide the scrollbars preventing them from showing in the image, but it does require adding
-    the CSS to your e2e environment without hiding the scrollbars in other environments.
-  
-2) Timing
-    
-    To add a pause before taking screenshots you can use the setPauseBeforeScreenshot function.  This will give the
-    scrollbars time to disappear.
-    
-    ```typescript
-    function setPauseBeforeScreenshot(pause: number | true | false): number | false;
-    ```
-    
-    You can pass the function:
-    a) false - To disable pausing
-    b) true - To set a 1 second pause before taking screenshots
-    c) A number to indicate how many milliseconds to pause before taking a screenshot.
+After many attempts, the only reliable way I found to avoid the issue was to pause before each screenshot
+allowing time for the scroll bars to fade.
 
-    The function returns the previous value.
+See the utility section for [setPauseBeforeScreenshot](#setpausebeforescreenshot) for more information.
 
-    This method does not require making any changes to your CSS or HTML, but will obviously cause your test to run slower.
 
 
 ## Edge (Currently Unsupported)

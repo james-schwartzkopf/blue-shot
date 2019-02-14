@@ -16,11 +16,11 @@ exports.config = {
   // directConnect: true,
 
   multiCapabilities: [
-    // {'browserName': 'chrome'},
+    {'browserName': 'chrome'},
 
     // //Note: If we don't disable full page screenshots, IE will reset scroll and dimensions in our screenshots
-    // {'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
-    // {'browserName': 'firefox'},
+    {'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
+    {'browserName': 'firefox'},
     {'browserName': 'safari'},
     // {'browserName': 'MicrosoftEdge'},
   ],
@@ -75,14 +75,13 @@ exports.config = {
     enableLogger();
 
     const browserName = (await browser.getProcessedConfig()).capabilities.browserName;
-    setBrowserName(browserName);
-    console.log('huh??');
-
     //Pause so Safari has time to hide it's scroll bars.
     if (browserName === 'safari') {
       setPauseBeforeScreenshot(true);
     }
 
+    //used for image paths, etc.
+    setBrowserName(browserName);
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
     return setViewportSize(800, 600);
