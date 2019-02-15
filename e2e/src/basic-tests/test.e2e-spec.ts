@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 
-describe('basic', () => {
+fdescribe('basic', () => {
   beforeEach(async () => {
   });
   it('can capture an element', async () => {
