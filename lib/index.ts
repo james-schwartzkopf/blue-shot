@@ -22,6 +22,12 @@ export function setPauseBeforeScreenshot(pause: number | true | false): number |
   return was;
 }
 
+let viewportAdjustment: {top: number; left: number, right?: number; bottom?: number} | undefined;
+export function setViewportAdjustment(adj: {top: number; left: number, right?: number; bottom?: number} | undefined) {
+  const old = viewportAdjustment;
+  viewportAdjustment = adj;
+  return old;
+}
 
 //To support IE, we need to be careful about the ES features we use here
 //TODO would be nice to have this compile separately so the rest could target es2017
@@ -362,6 +368,14 @@ function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
     }
     const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));
 
+    if (viewportAdjustment) {
+      r = {
+        ...r,
+        top: r.top + viewportAdjustment.top,
+        left: r.left + viewportAdjustment.left
+        //TODO assert width and height still fit
+      };
+    }
     PNG.bitblt(
       screenPng,
       dest,
