@@ -1,8 +1,6 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
-import { calcChromeMargins } from "./src/utils";
-
 const protractor       = require("protractor");
 const { SpecReporter } = require('jasmine-spec-reporter');
 
@@ -68,7 +66,7 @@ exports.config = {
     });
 
     const { enableLogger, setPauseBeforeScreenshot } = require('blue-shot');
-    const { setViewportSize, setBrowserName, toMatchBaseline } = require('./src/utils');
+    const { setViewportSize, setBrowserName, toMatchBaseline, calcChromeMargins } = require('./src/utils');
 
     beforeAll(() => {
       jasmine.addMatchers({
