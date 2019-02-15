@@ -16,12 +16,19 @@ exports.config = {
   // directConnect: true,
 
   multiCapabilities: [
-    {'browserName': 'chrome'},
+    //{'browserName': 'chrome'},
 
     // //Note: If we don't disable full page screenshots, IE will reset scroll and dimensions in our screenshots
-    {'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
-    {'browserName': 'firefox'},
-    {'browserName': 'safari'},
+    //{'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
+    //{'browserName': 'firefox'},
+    //{'browserName': 'safari'},
+    {
+      'browserName'      : 'Safari',
+      'deviceName'       : 'iPhone XS Simulator',
+      'deviceOrientation': 'portrait',
+      'platformVersion'  : '12.0',
+      'platformName'     : 'iOS',
+    }
     // {'browserName': 'MicrosoftEdge'},
   ],
 
