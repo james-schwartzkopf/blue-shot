@@ -90,7 +90,7 @@ exports.config = {
     //used for image paths, etc.
     setBrowserName(browserName);
 
-    const chrome = calcChromeMargins(browser);
+    const chrome = await calcChromeMargins(browser);
     console.log('chrome', chrome);
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
