@@ -2,10 +2,50 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { PNG } from 'pngjs';
 import mkdirp = require('mkdirp');
-import { browser } from 'protractor';
+import { browser, WebDriver } from 'protractor';
 import { Rect } from 'blue-shot';
 
 let browserName = 'unknown';
+
+export async function calcChromeMargins(browser: WebDriver) {
+  await browser.get('data:text/html,' + encodeURI('<body style="background-color:#F00"></body>'));
+  const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));
+  const midTop = screenPng.height / 2;
+  const midLeft = screenPng.width / 2;
+  const midColor = getColor(screenPng, midTop, midLeft);
+  function getColor(png: PNG, x: number, y: number) {
+    const index = (png.width * y + x) * 4;
+    //tslint:disable-next-line:no-bitwise
+    return png.data[index] + png.data[index + 1] << 8 + png.data[index + 2] << 16;
+  }
+  let top;
+  for (top = midTop; top > 0; top--) {
+    if (midColor !== getColor(screenPng, midLeft, top)) {
+      break;
+    }
+  }
+  let bottom;
+  for (bottom = midTop; bottom < screenPng.height; bottom++) {
+    if (midColor !== getColor(screenPng, midLeft, bottom)) {
+      break;
+    }
+  }
+
+  let left;
+  for (left = midLeft; left > 0; left--) {
+    if (midColor !== getColor(screenPng, left, midTop)) {
+      break;
+    }
+  }
+  let right;
+  for (right = midLeft; right < screenPng.width; right++) {
+    if (midColor !== getColor(screenPng, right, midTop)) {
+      break;
+    }
+  }
+
+  return {top, left, bottom, right};
+}
 
 export function setBrowserName(name: string) {
   browserName = name.toLowerCase().replace(/\s+/g, '-');

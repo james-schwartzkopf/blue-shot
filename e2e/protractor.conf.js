@@ -1,6 +1,8 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
+import { calcChromeMargins } from "./src/utils";
+
 const protractor       = require("protractor");
 const { SpecReporter } = require('jasmine-spec-reporter');
 
@@ -89,6 +91,9 @@ exports.config = {
 
     //used for image paths, etc.
     setBrowserName(browserName);
+
+    const chrome = calcChromeMargins(browser);
+    console.log('chrome', chrome);
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
 //    return setViewportSize(800, 600);
