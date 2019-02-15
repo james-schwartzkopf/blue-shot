@@ -91,7 +91,7 @@ exports.config = {
     setBrowserName(browserName);
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
-    return setViewportSize(800, 600);
+//    return setViewportSize(800, 600);
   }
 };
 
