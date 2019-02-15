@@ -26,11 +26,12 @@ export function setPauseBeforeScreenshot(pause: number | true | false): number |
 //TODO would be nice to have this compile separately so the rest could target es2017
 function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
   const extraParents: HTMLElement[] = [].slice.apply(arguments, [1]);
-  return getOffsetParents(targetElement);
+  return hackUpReturn(getOffsetParents(targetElement));
 
   //#@#$#ing hell, does anything in this whole webdriver mess of hacks work the same across drivers
   //  https://github.com/appium/appium-ios-driver/issues/173
   //  https://github.com/appium/appium/issues/6831
+  //TODO I think typescript 3.x can handle typing this return?
   function hackUpReturn(alreadyHackedData: [ElementInfo, number][]) {
     const moreHackedData: any[] = alreadyHackedData.map(([ei]) => {
       const el = ei.el; //el is actually HTMLElement
