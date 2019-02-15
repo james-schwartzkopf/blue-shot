@@ -46,15 +46,15 @@ function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElemen
   //  send them back to set the scrollTop/scrollLeft using executeScript.
   //  Which I believe is web driver code for !$%& you cache it your damn self >:-<
 
-  function hackUpReturn(alreadyHackedData: [ElementInfo<HTMLElement>, number][]): [ElementInfo<number>, number][] {
+  function hackUpReturn(data: [ElementInfo<HTMLElement>, number][]): [ElementInfo<number>, number][] {
     const elCache: HTMLElement[] = [];
 
-    const moreHackedData: [ElementInfo<number>, number][] = alreadyHackedData.forEach(([ei, i]) => {
+    data.forEach(([ei, i]) => {
       ei.el = elCache.push(ei.el) - 1 as any;
-    }) as any;
+    });
 
     (window as any).__blueShotElCache = elCache;
-    return moreHackedData;
+    return data as any as [ElementInfo<number>, number][];
   }
 
   function hasOverflow(el: HTMLElement) {
