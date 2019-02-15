@@ -7,11 +7,11 @@ import { Rect } from 'blue-shot';
 
 let browserName = 'unknown';
 
-export async function calcChromeMargins(browser: WebDriver) {
+export async function findViewportInBrowserChrome(browser: WebDriver) {
   await browser.get('data:text/html,' + encodeURI('<body style="background-color:#F00"></body>'));
   const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));
-  const midTop = screenPng.height / 2;
-  const midLeft = screenPng.width / 2;
+  const midTop = Math.floor(screenPng.height / 2);
+  const midLeft = Math.floor(screenPng.width / 2);
   const midColor = getColor(screenPng, midTop, midLeft);
   function getColor(png: PNG, x: number, y: number) {
     const index = (png.width * y + x) * 4;

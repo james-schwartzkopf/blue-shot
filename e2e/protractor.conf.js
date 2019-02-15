@@ -65,8 +65,8 @@ exports.config = {
       }
     });
 
-    const { enableLogger, setPauseBeforeScreenshot } = require('blue-shot');
-    const { setViewportSize, setBrowserName, toMatchBaseline, calcChromeMargins } = require('./src/utils');
+    const { enableLogger, setPauseBeforeScreenshot }                                        = require('blue-shot');
+    const { setViewportSize, setBrowserName, toMatchBaseline, findViewportInBrowserChrome } = require('./src/utils');
 
     beforeAll(() => {
       jasmine.addMatchers({
@@ -90,7 +90,7 @@ exports.config = {
     //used for image paths, etc.
     setBrowserName(browserName);
 
-    const chrome = await calcChromeMargins(browser);
+    const chrome = await findViewportInBrowserChrome(browser);
     console.log('chrome', chrome);
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
