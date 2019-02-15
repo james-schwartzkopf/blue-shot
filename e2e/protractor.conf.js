@@ -65,7 +65,7 @@ exports.config = {
       }
     });
 
-    const { enableLogger, setPauseBeforeScreenshot }                                        = require('blue-shot');
+    const { enableLogger, setPauseBeforeScreenshot, setViewportAdjustment }                 = require('blue-shot');
     const { setViewportSize, setBrowserName, toMatchBaseline, findViewportInBrowserChrome } = require('./src/utils');
 
     beforeAll(() => {
@@ -92,6 +92,7 @@ exports.config = {
 
     const chrome = await findViewportInBrowserChrome(browser);
     console.log('chrome', chrome);
+    setViewportAdjustment(chrome);
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
 //    return setViewportSize(800, 600);
