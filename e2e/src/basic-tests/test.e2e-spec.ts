@@ -32,6 +32,8 @@ describe('basic', () => {
     const actual = await captureElement(browser, $('#test-box'));
     applyMask(actual, mask, [0xff, 0xae, 0x19, 0xFF]);
     applyMask(baseline, mask, [0xff, 0xae, 0x19, 0xFF]);
-    expect(actual.data).toEqual(baseline.data);
+    //TODO error message is too long for travis
+    // expect(actual.data).toEqual(baseline.data);
+    expect(actual.data.equals(baseline.data)).toBeTruthy('Image did not match');
   });
 });
