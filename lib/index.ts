@@ -49,10 +49,9 @@ function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElemen
   function hackUpReturn(alreadyHackedData: [ElementInfo<HTMLElement>, number][]): [ElementInfo<number>, number][] {
     const elCache: HTMLElement[] = [];
 
-    const moreHackedData: any[] = alreadyHackedData.map(([ei, i]) => [{
-      ...ei,
-      el: elCache.push(ei.el) - 1
-    }, i]);
+    const moreHackedData: [ElementInfo<number>, number][] = alreadyHackedData.forEach(([ei, i]) => {
+      ei.el = elCache.push(ei.el) - 1 as any;
+    }) as any;
 
     (window as any).__blueShotElCache = elCache;
     return moreHackedData;
