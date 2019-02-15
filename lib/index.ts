@@ -22,23 +22,39 @@ export function setPauseBeforeScreenshot(pause: number | true | false): number |
   return was;
 }
 
+
 //To support IE, we need to be careful about the ES features we use here
 //TODO would be nice to have this compile separately so the rest could target es2017
 function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
   const extraParents: HTMLElement[] = [].slice.apply(arguments, [1]);
   return hackUpReturn(getOffsetParents(targetElement));
 
-  //#@#$#ing hell, does anything in this whole webdriver mess of hacks work the same across drivers
+  //The reason we return [ElementInfo, number][] is because protractor (or one of hte layers beneath) couldn't handle
+  //  us sending the extraConfig objects with WebElements inside (used to configure clipping, possible future uses).
+  //
+  //So instead we have to pass the WebElements in the arguments, they can't even be in an array.  Rather than dealing with
+  //  marshaling it back, I decided to just return the index and let getElementInfo map index back to the extraConfig arguments.
+  //
+  //So that's the first(ish) layer of hacks, read on for the continuing saga...
+
+  //#@#$#ing hell, does anything in this whole webdriver mess of hacks work the same across drivers???
   //  https://github.com/appium/appium-ios-driver/issues/173
   //  https://github.com/appium/appium/issues/6831
-  //TODO I think typescript 3.x can handle typing this return?
-  function hackUpReturn(alreadyHackedData: [ElementInfo, number][]) {
-    const moreHackedData: any[] = alreadyHackedData.map(([ei]) => {
-      const el = ei.el; //el is actually HTMLElement
-      ei.el = null as any;
-      return el;
-    });
-    moreHackedData.push(alreadyHackedData);
+  //
+  //Even when I hacked up the return so the HTMLElements were directly in a returned array,
+  //  it created WebElements, but they would then fail with: 'Element does not exist in cache' when I try to
+  //  send them back to set the scrollTop/scrollLeft using executeScript.
+  //  Which I believe is web driver code for !$%& you cache it your damn self >:-<
+
+  function hackUpReturn(alreadyHackedData: [ElementInfo<HTMLElement>, number][]): [ElementInfo<number>, number][] {
+    const elCache: HTMLElement[] = [];
+
+    const moreHackedData: any[] = alreadyHackedData.map(([ei, i]) => [{
+      ...ei,
+      el: elCache.push(ei.el) - 1
+    }, i]);
+
+    (window as any).__blueShotElCache = elCache;
     return moreHackedData;
   }
 
@@ -51,7 +67,7 @@ function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElemen
       && (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth || el.scrollTop > 0 || el.scrollLeft > 0)
     );
   }
-  //boooo IE :>(
+  //boooo IE :>(, no Array.findIndex
   function findIndex<T>(arr: T[], fn: ((e: T) => boolean)) {
     for (let i = 0; i < arr.length; i++) {
       if (fn(arr[i])) {
@@ -70,8 +86,9 @@ function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElemen
 
 
     //TODO handle parents with position !== 'static'
+
     //  Was originally using offsetParent and offsetTop/offsetLeft, but it turns out Firefox and Chrome differ on
-    //   handling parent borders
+    //   handling parent borders.  Hopefully sub-pixel rounding doesn't bite us next... ... ... ...
 
     //tslint:disable-next-line:no-non-null-assertion
     const pp = p || document.documentElement!;
@@ -85,18 +102,16 @@ function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElemen
     return {parent: p, offset: offset, extra: extra};
   }
 
-  function getOffsetParents(el: HTMLElement): [ElementInfo, number][] {
-    const ret: [ElementInfo, number][] = [];
+  function getOffsetParents(el: HTMLElement): [ElementInfo<HTMLElement>, number][] {
+    const ret: [ElementInfo<HTMLElement>, number][] = [];
 
     let extra = findIndex(extraParents, ep => ep === el);
     let e: HTMLElement | null = el;
     while (e) {
       const bcr = e.getBoundingClientRect();
       const overflowParent = findOverflowParent(e);
-      const elInfo: ElementInfo = {
-        //TODO use conditional types or something to switch between WebElement on protractor side and HTMLElement browser side
-        el: e as any,
-        //TODO either get rid of this or add classList
+      const elInfo: ElementInfo<HTMLElement> = {
+        el: e,
         description: e.tagName + (e.id ? '#' + e.id : '') + (e.classList.length > 0 ? '.' + [].slice.apply(e.classList).join('.') : ''),
         client: {
           top: e.clientTop,
@@ -137,6 +152,38 @@ function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElemen
 
 }
 
+function setScrollTop(elIndex: number, top: number) {
+  let el: Element = (window as any).__blueShotElCache[elIndex];
+  if (el === document.documentElement) {
+    el = document.scrollingElement || el;
+  }
+  el.scrollTop = top;
+  return el.scrollTop;
+
+}
+
+function setScrollLeft(elIndex: number, left: number) {
+  let el: Element = (window as any).__blueShotElCache[elIndex];
+  if (el === document.documentElement) {
+    el = document.scrollingElement || el;
+  }
+  el.scrollLeft = left;
+  return el.scrollLeft;
+}
+
+function cleanUp(elInfos: ElementInfo<number>[]) {
+  elInfos.forEach(elInfo => {
+    let el: Element = (window as any).__blueShotElCache[elInfo.el];
+    if (el === document.documentElement) {
+      el = document.scrollingElement || el;
+    }
+    el.scrollTop = elInfo.scroll.top;
+    el.scrollLeft = elInfo.scroll.left;
+  });
+  delete (window as any).__blueShotElCache;
+}
+
+
 interface Point {
   x: number;
   y: number;
@@ -147,8 +194,8 @@ export interface Rect {
   width: number;
   height: number;
 }
-interface ElementInfo {
-  el: WebElement;
+interface ElementInfo<T = number> {
+  el: T;
   description: string;
   client: Rect;
   scroll: Rect;
@@ -232,13 +279,7 @@ function buildCapture(
       if (view.top > (remainingH.top - viewMargins.topHeight) || bottom(remainingH) > (bottom(view) - viewMargins.bottomHeight)) {
         const top = Math.min(maxScrollTop, remainingH.top - viewMargins.topHeight);
 
-        view.top = await browser.executeScript<number>((el: Element, t: number) => {
-          if (el === document.documentElement) {
-            el = document.scrollingElement || el;
-          }
-          el.scrollTop = t;
-          return el.scrollTop;
-        }, elInfo.el, top);
+        view.top = await browser.executeScript<number>(setScrollTop, elInfo.el, top);
 
         if (view.top !== top) {
           throw new Error(`Error setting scrollTop for ${elInfo.description} expected ${top} got ${view.top}`);
@@ -255,13 +296,7 @@ function buildCapture(
       while (remainingV) {
         if (view.left > (remainingV.left - viewMargins.leftWidth) || right(remainingV) > (right(view) - viewMargins.rightWidth)) {
           const left = Math.min(maxScrollLeft, remainingV.left - viewMargins.leftWidth);
-          view.left = await browser.executeScript<number>((el: Element, l: number) => {
-            if (el === document.documentElement) {
-              el = document.scrollingElement || el;
-            }
-            el.scrollLeft = l;
-            return el.scrollLeft;
-          }, elInfo.el, left);
+          view.left = await browser.executeScript<number>(setScrollLeft, elInfo.el, left);
           if (view.left !== left) {
             throw new Error(`Error setting scrollLeft for ${elInfo.description} expected ${left} got ${view.left}`);
           }
@@ -394,30 +429,18 @@ async function getElementInfo(
   extraConfig: ElementCaptureOptions[]
 ): Promise<[ElementInfo, CaptureOptions | undefined][]> {
   //protractor doesn't map extraConfig properly as an array, so convert to rest args.
-  const hackedUpReturn = (await browser.executeScript<any[]>(getOffsetInfo, el, ...extraConfig.map(ec => ec.el)));
-
-  //see hackUpReturn in getOffsetInfo
-  const somewhatUnHacked: [ElementInfo, number][] = hackedUpReturn.pop();
-  (hackedUpReturn as WebElement[]).forEach((e, i) => somewhatUnHacked[i][0].el = e);
-
-  //Now that we've undone that hack, undo the extraConfig hack
-  const ret = somewhatUnHacked.map(
+  const ret = (await browser.executeScript<any[]>(getOffsetInfo, el, ...extraConfig.map(ec => ec.el))).map(
+    //getOffsetInfo returned the index of matched CaptureOptions based on
+    //  the els we sent above, so map back to the CaptureOptions objects
     ([p, index]): [ElementInfo, CaptureOptions | undefined] => [p, index > -1 ? extraConfig[index].extra : undefined]
   );
+
   if (log) {
     //tslint:disable-next-line:no-non-null-assertion
     ret.forEach(([elInfo, extra]) => log!('el:', elInfo.description, toLoggableJSON(elInfo), toLoggableJSON(extra)));
   }
 
   return ret;
-}
-
-function restoreScroll(elInfos: ElementInfo[]) {
-  elInfos.forEach(elInfo => {
-    const el = elInfo.el as any as HTMLElement;
-    el.scrollTop = elInfo.scroll.top;
-    el.scrollLeft = elInfo.scroll.left;
-  });
 }
 
 /**
@@ -439,6 +462,8 @@ export async function captureContent(browser: WebDriver, el: WebElement, ...extr
 
   const png = new PNG({height: region.height, width: region.width});
   await captureViewPort(region, png, {x: 0, y: 0});
+
+  await browser.executeScript(cleanUp, parents.map(p => p[0]));
 
   return png;
 }
@@ -467,6 +492,8 @@ export async function captureContentRegion(
   const png = new PNG({height: region.height, width: region.width});
   await captureViewPort(region, png, {x: 0, y: 0});
 
+  await browser.executeScript(cleanUp, parents.map(p => p[0]));
+
   return png;
 }
 
@@ -491,7 +518,7 @@ export async function captureElement(browser: WebDriver, el: WebElement, ...extr
   const png = new PNG({height: elInfo.offset.height, width: elInfo.offset.width});
   await captureViewPort(elInfo.offset, png, {x: 0, y: 0});
 
-  await browser.executeScript(restoreScroll, parents.map(p => p[0]));
+  await browser.executeScript(cleanUp, parents.map(p => p[0]));
 
   return png;
 }
