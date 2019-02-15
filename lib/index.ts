@@ -21,11 +21,25 @@ export function setPauseBeforeScreenshot(pause: number | true | false): number |
   pauseBeforeScreenshot = pause === true ? 1000 : pause;
   return was;
 }
+
 //To support IE, we need to be careful about the ES features we use here
 //TODO would be nice to have this compile separately so the rest could target es2017
 function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
   const extraParents: HTMLElement[] = [].slice.apply(arguments, [1]);
   return getOffsetParents(targetElement);
+
+  //#@#$#ing hell, does anything in this whole webdriver mess of hacks work the same across drivers
+  //  https://github.com/appium/appium-ios-driver/issues/173
+  //  https://github.com/appium/appium/issues/6831
+  function hackUpReturn(alreadyHackedData: [ElementInfo, number][]) {
+    const moreHackedData: any[] = alreadyHackedData.map(([ei]) => {
+      const el = ei.el; //el is actually HTMLElement
+      ei.el = null as any;
+      return el;
+    });
+    moreHackedData.push(alreadyHackedData);
+    return moreHackedData;
+  }
 
   function hasOverflow(el: HTMLElement) {
     const cs = window.getComputedStyle(el);
@@ -69,6 +83,7 @@ function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElemen
 
     return {parent: p, offset: offset, extra: extra};
   }
+
   function getOffsetParents(el: HTMLElement): [ElementInfo, number][] {
     const ret: [ElementInfo, number][] = [];
 
@@ -378,9 +393,16 @@ async function getElementInfo(
   extraConfig: ElementCaptureOptions[]
 ): Promise<[ElementInfo, CaptureOptions | undefined][]> {
   //protractor doesn't map extraConfig properly as an array, so convert to rest args.
-  const ret = (await browser.executeScript<[ElementInfo, number][]>(getOffsetInfo, el, ...extraConfig.map(ec => ec.el)))
-    .map(([p, index]): [ElementInfo, CaptureOptions | undefined] => [p, index > -1 ? extraConfig[index].extra : undefined])
-  ;
+  const hackedUpReturn = (await browser.executeScript<any[]>(getOffsetInfo, el, ...extraConfig.map(ec => ec.el)));
+
+  //see hackUpReturn in getOffsetInfo
+  const somewhatUnHacked: [ElementInfo, number][] = hackedUpReturn.pop();
+  (hackedUpReturn as WebElement[]).forEach((e, i) => somewhatUnHacked[i][0].el = e);
+
+  //Now that we've undone that hack, undo the extraConfig hack
+  const ret = somewhatUnHacked.map(
+    ([p, index]): [ElementInfo, CaptureOptions | undefined] => [p, index > -1 ? extraConfig[index].extra : undefined]
+  );
   if (log) {
     //tslint:disable-next-line:no-non-null-assertion
     ret.forEach(([elInfo, extra]) => log!('el:', elInfo.description, toLoggableJSON(elInfo), toLoggableJSON(extra)));
