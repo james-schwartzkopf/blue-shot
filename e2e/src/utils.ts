@@ -8,7 +8,16 @@ import { Rect } from 'blue-shot';
 let browserName = 'unknown';
 
 export async function findViewportInBrowserChrome(browser: WebDriver) {
-  await browser.get('data:text/html,' + encodeURI('<body style="background-color:#F00"></body>'));
+  await browser.get('data:text/html,' + encodeURI(`
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title>title</title>
+      </head>
+      <body style="background-color:#F00">
+      </body>
+    </html>
+  `));
 
   const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));
   const actualFilename = path.join(__dirname, `../../.test-results/${browserName}/test-screen.png`);
