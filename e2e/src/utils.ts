@@ -18,7 +18,7 @@ export async function findViewportInBrowserChrome(browser: WebDriver) {
         <meta name="viewport" content="width=device-width">
         <title>title</title>
       </head>
-      <body style="background-color:#F00">
+      <body style="background-color:#F00;padding: 0;">
         <div style="background-color: #0F0;width: 1000px;height: 1000px;">&nbsp;</div>
       </body>
     </html>
