@@ -8,11 +8,14 @@ import { Rect } from 'blue-shot';
 let browserName = 'unknown';
 
 export async function findViewportInBrowserChrome(browser: WebDriver) {
+  //TODO figure width out
+  //https://stackoverflow.com/questions/31767904/why-is-document-documentelement-clientwidth-980px-on-mobile-phone
+  //https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/UsingtheViewport/UsingtheViewport.html#//apple_ref/doc/uid/TP40006509-SW25
   await browser.get('data:text/html,' + encodeURI(`
     <!DOCTYPE html>
     <html lang="en">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="initial-scale=1">
         <title>title</title>
       </head>
       <body style="background-color:#F00">
