@@ -9,7 +9,7 @@ import * as path from 'path';
 fdescribe('basic', () => {
   beforeEach(async () => {
   });
-  it('can capture an element', async () => {
+  fit('can capture an element', async () => {
     await browser.get('basic-tests/basic-test.html');
     const png = await captureElement(browser, $('#test-box'));
     expect(png).toMatchBaseline('basic-tests/test-box.png');

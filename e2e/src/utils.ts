@@ -9,11 +9,18 @@ let browserName = 'unknown';
 
 export async function findViewportInBrowserChrome(browser: WebDriver) {
   await browser.get('data:text/html,' + encodeURI('<body style="background-color:#F00"></body>'));
+
   const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));
-  console.log('screenshot', {heifht: screenPng.height, width: screenPng.width});
+  const actualFilename = path.join(__dirname, `../../.test-results/${browserName}/test-screen.png`);
+  mkdirp.sync(path.dirname(actualFilename));
+  fs.writeFileSync(actualFilename, PNG.sync.write(png));
+
+  console.log('screenshot dims', {height: screenPng.height, width: screenPng.width});
   console.log('dpr', await browser.executeScript(() => window.devicePixelRatio));
   console.log('screen', await browser.executeScript(() => screen));
-  console.log('doc el', await browser.executeScript(() => ({height: document.scrollingElement.clientHeight, widht: document.scrollingElement.clientWidth})));
+  console.log('doc el', await browser.executeScript(() => ({height: document.documentElement.clientHeight, widht: document.documentElement.clientWidth})));
+  console.log('doc scroll el', await browser.executeScript(() => ({height: document.scrollingElement.clientHeight, widht: document.scrollingElement.clientWidth})));
+
   const midTop = Math.floor(screenPng.height / 2);
   const midLeft = Math.floor(screenPng.width / 2);
   const midColor = getColor(screenPng, midTop, midLeft);

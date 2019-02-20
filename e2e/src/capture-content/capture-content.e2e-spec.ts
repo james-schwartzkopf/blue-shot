@@ -2,7 +2,7 @@ import { browser, By, element } from 'protractor';
 import { captureContent, ClipMargins, clipView, setPauseBeforeScreenshot } from 'blue-shot';
 import { getBrowserName } from '../utils';
 
-fdescribe('captureContent', () => {
+describe('captureContent', () => {
   it('non scrolling', async () => {
     const path = 'capture-content/no-scroll';
     await browser.get(`${path}.html`);
