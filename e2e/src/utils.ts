@@ -2,12 +2,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { PNG } from 'pngjs';
 import mkdirp = require('mkdirp');
-import { browser, WebDriver } from 'protractor';
+import { browser, protractor, WebDriver } from 'protractor';
 import { Rect } from 'blue-shot';
 
 let browserName = 'unknown';
 
-export async function findViewportInBrowserChrome(browser: WebDriver) {
+export async function findViewportInBrowserChrome(viewport: string) {
   //TODO figure width out
   //https://stackoverflow.com/questions/31767904/why-is-document-documentelement-clientwidth-980px-on-mobile-phone
   //https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/UsingtheViewport/UsingtheViewport.html#//apple_ref/doc/uid/TP40006509-SW25
@@ -15,7 +15,7 @@ export async function findViewportInBrowserChrome(browser: WebDriver) {
     <!DOCTYPE html>
     <html lang="en">
       <head>
-        <meta name="viewport" content="width=device-width">
+        ${viewport}
         <title>title</title>
       </head>
       <body style="background-color:#F00;padding: 0;">
@@ -29,6 +29,8 @@ export async function findViewportInBrowserChrome(browser: WebDriver) {
   mkdirp.sync(path.dirname(actualFilename));
   fs.writeFileSync(actualFilename, PNG.sync.write(screenPng));
 
+  console.log((await browser.getProcessedConfig()).capabilities);
+  console.log(viewport);
   console.log('screenshot dims', {height: screenPng.height, width: screenPng.width});
   console.log('dpr', await browser.executeScript(() => window.devicePixelRatio));
   console.log('screen', await browser.executeScript(() => screen));
@@ -70,7 +72,9 @@ export async function findViewportInBrowserChrome(browser: WebDriver) {
     }
   }
 
-  return {top, left, bottom, right};
+  const chrome = {top, left, bottom, right};
+  console.log('chrome', chrome);
+  return chrome;
 }
 
 export function setBrowserName(name: string) {

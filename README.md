@@ -412,6 +412,45 @@ the effort to fix this.  I willing to accept pull request, especially if they so
 * https://blogs.windows.com/windowsexperience/2018/12/06/microsoft-edge-making-the-web-better-through-more-open-source-collaboration/#b3uKRwXkzflsRJzV.97
 
 
+## iOS
+
+In addition to the Safari issues mentioned above, mobile iOS Safari presents several addtional challanges, at lease
+when using the iOS Simulator & Appium via Sauce Labs.
+
+First, the screenshots captured by the simulator are actually of the full screen, including the browser chrome.  To account for this
+the XXX option was added to trim the screenshot to the actual browser viewport.
+
+Second, the bottom toolbar appears to overlap the viewport, this can be worked around using the clipView utility. TODO XXX global clip??
+
+Third, depending on viewport settings the image is often scaled.  With no default specified the viewport (document.documentElement) will
+report 980 pixels, but it wll be scaled to fit the screen width.
+
+TODO XXX some examples:
+
+{
+      'browserName'      : 'Safari',
+      'deviceName'       : 'iPhone XS Simulator',
+      'deviceOrientation': 'portrait',
+      'platformVersion'  : '12.0',
+      'platformName'     : 'iOS',
+}
+<meta name="viewport" content="width=device-width">
+screenshot dims { height: 2436, width: 1125 }
+dpr 3
+screen { availHeight: 812,
+  pixelDepth: 32,
+  availWidth: 375,
+  availLeft: 0,
+  height: 812,
+  width: 375,
+  availTop: 0,
+  colorDepth: 32 }
+window { width: 600, height: 1016 }
+doc el { width: 375, tag: 'HTML', height: 635 }
+doc scroll el { width: 359, tag: 'BODY', height: 1000 }
+chrome { top: 287, left: 0, bottom: 2176, right: 1125 }
+
+
 ## Big Thanks
 
 Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs][homepage]
