@@ -70,7 +70,6 @@ export async function findViewportInBrowserChrome(viewport: string) {
   }
 
   const chrome = {top, left, bottom, right};
-  console.log('capabilities', caps);
   console.log(viewport);
   console.log('screenshot dims', {height: screenPng.height, width: screenPng.width});
   console.log('chrome', chrome);

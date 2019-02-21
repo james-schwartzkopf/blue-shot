@@ -91,6 +91,7 @@ exports.config = {
     setBrowserName(browserName);
 
     const caps = (await browser.getProcessedConfig()).capabilities;
+    console.log('capabilities', caps);
     await findViewportInBrowserChrome('<!-- No Viewport meta -->');
     console.log('\n');
     await findViewportInBrowserChrome('<meta name="viewport" content="width=device-width, initial-scale=1">');
