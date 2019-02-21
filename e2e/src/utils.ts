@@ -29,14 +29,12 @@ export async function findViewportInBrowserChrome(viewport: string) {
   mkdirp.sync(path.dirname(actualFilename));
   fs.writeFileSync(actualFilename, PNG.sync.write(screenPng));
 
-  console.log((await browser.getProcessedConfig()).capabilities);
-  console.log(viewport);
-  console.log('screenshot dims', {height: screenPng.height, width: screenPng.width});
-  console.log('dpr', await browser.executeScript(() => window.devicePixelRatio));
-  console.log('screen', await browser.executeScript(() => screen));
-  console.log('window', await browser.executeScript(() => ({height: window.innerHeight, width: window.innerWidth})));
-  console.log('doc el', await browser.executeScript(() => ({tag: document.documentElement.tagName, height: document.documentElement.clientHeight, width: document.documentElement.clientWidth})));
-  console.log('doc scroll el', await browser.executeScript(() => ({tag: document.scrollingElement.tagName, height: document.scrollingElement.clientHeight, width: document.scrollingElement.clientWidth})));
+  const caps = (await browser.getProcessedConfig()).capabilities;
+  const dpr = await browser.executeScript(() => window.devicePixelRatio);
+  const screenDims = await browser.executeScript(() => screen);
+  const windowDims = await browser.executeScript(() => ({height: window.innerHeight, width: window.innerWidth}));
+  const docElDims = await browser.executeScript(() => ({tag: document.documentElement.tagName, height: document.documentElement.clientHeight, width: document.documentElement.clientWidth}));
+  const scrollElDims = await browser.executeScript(() => ({tag: document.scrollingElement.tagName, height: document.scrollingElement.clientHeight, width: document.scrollingElement.clientWidth}));
 
   const midTop = Math.floor(screenPng.height / 2);
   const midLeft = Math.floor(screenPng.width / 2);
@@ -73,7 +71,15 @@ export async function findViewportInBrowserChrome(viewport: string) {
   }
 
   const chrome = {top, left, bottom, right};
+  console.log('capabilities', caps);
+  console.log(viewport);
+  console.log('screenshot dims', {height: screenPng.height, width: screenPng.width});
   console.log('chrome', chrome);
+  console.log('dpr', dpr);
+  console.log('screen', screenDims);
+  console.log('window', windowDims);
+  console.log('doc el', docElDims);
+  console.log('doc scroll el', scrollElDims);
   return chrome;
 }
 
