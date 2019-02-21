@@ -29,7 +29,6 @@ export async function findViewportInBrowserChrome(viewport: string) {
   mkdirp.sync(path.dirname(actualFilename));
   fs.writeFileSync(actualFilename, PNG.sync.write(screenPng));
 
-  const caps = (await browser.getProcessedConfig()).capabilities;
   const dpr = await browser.executeScript(() => window.devicePixelRatio);
   const screenDims = await browser.executeScript(() => screen);
   const windowDims = await browser.executeScript(() => ({height: window.innerHeight, width: window.innerWidth}));

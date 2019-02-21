@@ -1,6 +1,8 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
+import { browser } from "protractor";
+
 const protractor       = require("protractor");
 const { SpecReporter } = require('jasmine-spec-reporter');
 
@@ -90,10 +92,15 @@ exports.config = {
     //used for image paths, etc.
     setBrowserName(browserName);
 
-    await findViewportInBrowserChrome('');
+    const caps = (await browser.getProcessedConfig()).capabilities;
+    await findViewportInBrowserChrome('<!-- No Viewport meta -->');
+    console.log('\n');
     await findViewportInBrowserChrome('<meta name="viewport" content="width=device-width, initial-scale=1">');
+    console.log('\n');
     await findViewportInBrowserChrome('<meta name="viewport" content="width=device-width, initial-scale=3">');
+    console.log('\n');
     await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
+    console.log('\n');
 
 
     const chrome = await findViewportInBrowserChrome('');
