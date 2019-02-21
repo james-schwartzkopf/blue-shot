@@ -1,7 +1,6 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
-const { protractor, browser }       = require("protractor");
 const { SpecReporter } = require('jasmine-spec-reporter');
 
 exports.config = {
@@ -65,6 +64,7 @@ exports.config = {
       }
     });
 
+    const { protractor, browser }       = require("protractor");
     const { enableLogger, setPauseBeforeScreenshot, setViewportAdjustment }                 = require('blue-shot');
     const { setViewportSize, setBrowserName, toMatchBaseline, findViewportInBrowserChrome } = require('./src/utils');
 
