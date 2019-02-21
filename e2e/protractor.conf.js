@@ -90,10 +90,10 @@ exports.config = {
     //used for image paths, etc.
     setBrowserName(browserName);
 
-    findViewportInBrowserChrome('');
-    findViewportInBrowserChrome('<meta name="viewport" content="width=device-width, initial-scale=1">');
-    findViewportInBrowserChrome('<meta name="viewport" content="width=device-width, initial-scale=3">');
-    findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
+    await findViewportInBrowserChrome('');
+    await findViewportInBrowserChrome('<meta name="viewport" content="width=device-width, initial-scale=1">');
+    await findViewportInBrowserChrome('<meta name="viewport" content="width=device-width, initial-scale=3">');
+    await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
 
 
     const chrome = await findViewportInBrowserChrome('');
