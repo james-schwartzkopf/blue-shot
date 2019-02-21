@@ -19,7 +19,7 @@ export async function findViewportInBrowserChrome(browser: WebDriver) {
         <title>title</title>
       </head>
       <body style="background-color:#F00;padding: 0;">
-        <div style="background-color: #0F0;width: 1000px;height: 1000px;">&nbsp;</div>
+        <div style="width: 1000px;height: 1000px;">&nbsp;</div>
       </body>
     </html>
   `));
@@ -32,8 +32,9 @@ export async function findViewportInBrowserChrome(browser: WebDriver) {
   console.log('screenshot dims', {height: screenPng.height, width: screenPng.width});
   console.log('dpr', await browser.executeScript(() => window.devicePixelRatio));
   console.log('screen', await browser.executeScript(() => screen));
-  console.log('doc el', await browser.executeScript(() => ({height: document.documentElement.clientHeight, width: document.documentElement.clientWidth})));
-  console.log('doc scroll el', await browser.executeScript(() => ({height: document.scrollingElement.clientHeight, width: document.scrollingElement.clientWidth})));
+  console.log('window', await browser.executeScript(() => ({height: window.innerHeight, width: window.innerWidth})));
+  console.log('doc el', await browser.executeScript(() => ({tag: document.documentElement.tagName, height: document.documentElement.clientHeight, width: document.documentElement.clientWidth})));
+  console.log('doc scroll el', await browser.executeScript(() => ({tag: document.scrollingElement.tagName, height: document.scrollingElement.clientHeight, width: document.scrollingElement.clientWidth})));
 
   const midTop = Math.floor(screenPng.height / 2);
   const midLeft = Math.floor(screenPng.width / 2);
