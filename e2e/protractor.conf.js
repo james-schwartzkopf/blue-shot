@@ -42,7 +42,7 @@ exports.config = {
     print: function() {}
   },
   beforeLaunch() {
-    const {express} = require('exress');
+    const {express} = require('express');
     const serveStatic = require('serve-static');
     const expressModifyResponse = require('express-modify-response');
 
