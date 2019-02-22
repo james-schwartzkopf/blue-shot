@@ -39,10 +39,14 @@
     "selenium-webdriver": "^3.6.0"
   },
   "devDependencies": {
+    "@types/express": "^4.16.1",
     "@types/jasmine": "~2.8.6",
     "@types/mkdirp": "^0.5.2",
     "@types/node": "~8.9.4",
     "@types/pngjs": "^3.3.2",
+    "@types/serve-index": "^1.7.29",
+    "express": "^4.16.4",
+    "express-modify-response": "^1.0.2",
     "finalhandler": "^1.1.1",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",

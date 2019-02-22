@@ -42,13 +42,22 @@ exports.config = {
     print: function() {}
   },
   beforeLaunch() {
-    const http = require('http');
+    const {express} = require('exress');
     const serveStatic = require('serve-static');
-    const server = http.createServer(serveStatic(require('path').join(__dirname, 'src')));
-    // const server = http.createServer((req, resp) =>
-    //   serveStatic(require('path').join(__dirname, 'src'), {fallthrough : false})(req, resp, require('finalhandler'))
-    // );
-    server.listen(3000);
+    const expressModifyResponse = require('express-modify-response');
+
+    const app = express();
+    app.use('/',
+      expressModifyResponse(
+        (req, res) => res.getHeader('Content-Type').startsWith('text/html'),
+        (req, res, buffer) => buffer.toString().replace(
+          '<!-- inject viewport meta here -->',
+          '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        )
+      ),
+      serveStatic(require('path').join(__dirname, 'src'))
+    );
+    app.listen(3000);
   },
   async onPrepare() {
     const tsConfig = require('path').join(__dirname, './tsconfig.e2e.json');
