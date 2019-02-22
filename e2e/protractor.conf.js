@@ -52,7 +52,7 @@ exports.config = {
         (req, res) => res.getHeader('Content-Type').startsWith('text/html'),
         (req, res, buffer) => buffer.toString().replace(
           '<!-- inject viewport meta here -->',
-          '<meta name="viewport" content="width=device-width, initial-scale=1">'
+          '<meta name="viewport" content="width=1125">'
         )
       ),
       serveStatic(require('path').join(__dirname, 'src'))
