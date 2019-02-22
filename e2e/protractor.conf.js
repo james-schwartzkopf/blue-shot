@@ -113,7 +113,7 @@ exports.config = {
 
     const chrome = await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
     console.log('chrome', chrome);
-    setViewportAdjustment(chrome);
+    setViewportAdjustment({ top: 282, left: 0, bottom: 2176, right: 1125 });
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
 //    return setViewportSize(800, 600);
