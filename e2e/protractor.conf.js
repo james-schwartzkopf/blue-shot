@@ -52,7 +52,7 @@ exports.config = {
         (req, res) => res.getHeader('Content-Type').startsWith('text/html'),
         (req, res, buffer) => buffer.toString().replace(
           '<!-- inject viewport meta here -->',
-          '<meta name="viewport" content="width=1125">'
+          '<meta name="viewport" content="width=1125, initial-scale=1">'
         )
       ),
       serveStatic(require('path').join(__dirname, 'src'))
@@ -107,11 +107,11 @@ exports.config = {
     console.log('\n');
     await findViewportInBrowserChrome('<meta name="viewport" content="width=device-width, initial-scale=3">');
     console.log('\n');
-    await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
+    await findViewportInBrowserChrome('<meta name="viewport" content="width=1125, initial-scale=1">');
     console.log('\n');
 
 
-    const chrome = await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
+    const chrome = await findViewportInBrowserChrome('<meta name="viewport" content="width=1125, initial-scale=1">');
     console.log('chrome', chrome);
     setViewportAdjustment({ top: 282, left: 0, bottom: 2176, right: 1125 });
 
