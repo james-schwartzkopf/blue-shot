@@ -414,7 +414,7 @@ the effort to fix this.  I willing to accept pull request, especially if they so
 
 ## iOS
 
-In addition to the Safari issues mentioned above, mobile iOS Safari presents several addtional challanges, at lease
+In addition to the Safari issues mentioned above, mobile iOS Safari presents several additional challenges, at least
 when using the iOS Simulator & Appium via Sauce Labs.
 
 First, the screenshots captured by the simulator are actually of the full screen, including the browser chrome.  To account for this
@@ -423,7 +423,13 @@ the XXX option was added to trim the screenshot to the actual browser viewport.
 Second, the bottom toolbar appears to overlap the viewport, this can be worked around using the clipView utility. TODO XXX global clip??
 
 Third, depending on viewport settings the image is often scaled.  With no default specified the viewport (document.documentElement) will
-report 980 pixels, but it wll be scaled to fit the screen width.
+report 980 pixels, but it wll be scaled to fit the screen width.  Note that window.devicePixelRatio appears to fixed to the device, not
+the current scale factor.  Use the setPixelScale property to set the scale between viewport pixels and screenshot pixels.
+
+Even if you set the viewport so it exactly matches the actual pixel size of the device, the screenshot appears to have compression artifacts.
+This appears to be a simulator/Appium issue, at least as provided by SauceLabs.
+
+
 
 TODO XXX some examples:
 

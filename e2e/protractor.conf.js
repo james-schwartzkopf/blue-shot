@@ -111,7 +111,7 @@ exports.config = {
     console.log('\n');
 
 
-    const chrome = await findViewportInBrowserChrome('<meta name="viewport" content="width=1125, initial-scale=1">');
+    const chrome = await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
     console.log('chrome', chrome);
     setViewportAdjustment({ top: 282, left: 0, bottom: 2176, right: 1125 });
 
