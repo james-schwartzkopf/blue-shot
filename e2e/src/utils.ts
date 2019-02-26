@@ -18,6 +18,7 @@ export async function findViewportInBrowserChrome(viewport: string) {
       <head>
         ${viewport}
         <title>title</title>
+  <!-- inject viewport meta here -->
       </head>
       <body style="background-color:#F00;padding: 0;">
         <div style="width: 1000px;height: 1000px;">&nbsp;</div>

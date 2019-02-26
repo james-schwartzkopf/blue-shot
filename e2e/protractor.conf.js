@@ -49,7 +49,7 @@ exports.config = {
     const app = express();
     app.use('/',
       expressModifyResponse(
-        (req, res) => res.getHeader('Content-Type').startsWith('text/html'),
+        (req, res) => res.getHeader('Content-Type') && res.getHeader('Content-Type').startsWith('text/html'),
         (req, res, buffer) => buffer.toString().replace(
           '<!-- inject viewport meta here -->',
           '<meta name="viewport" content="width=1125">'
