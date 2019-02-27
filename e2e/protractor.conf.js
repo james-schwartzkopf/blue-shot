@@ -65,7 +65,7 @@ exports.config = {
     const expressModifyResponse = require('express-modify-response');
 
     const app = express();
-    app.use(session());
+    app.use(session({secret: 'whatever', resave: false, saveUninitialized: false}));
     app.get('/set-viewport', (req, res) => {
       req.session.viewport = req.query.viewport;
       res.sendStatus(204)
