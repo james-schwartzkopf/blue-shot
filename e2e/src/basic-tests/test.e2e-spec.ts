@@ -11,6 +11,7 @@ describe('basic', () => {
   });
   it('can capture an element', async () => {
     await browser.get('basic-tests/basic-test.html');
+    console.log('wtf', await browser.executeScript(() => document.documentElement!.outerHTML));
     const png = await captureElement(browser, $('#test-box'));
     expect(png).toMatchBaseline('basic-tests/test-box.png');
   });
