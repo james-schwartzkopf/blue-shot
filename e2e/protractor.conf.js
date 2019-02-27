@@ -1,6 +1,8 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
+import { setPixelScale } from "../lib";
+
 const { SpecReporter } = require('jasmine-spec-reporter');
 
 exports.config = {
@@ -22,6 +24,24 @@ exports.config = {
     //{'browserName': 'firefox'},
     //{'browserName': 'safari'},
     {
+      'logName': 'ios-full-width',
+      'blue-shot-e2e:config': JSON.stringify({
+        viewport: '<meta name="viewport" content="width=1125">',
+        viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
+      }),
+      'browserName'      : 'Safari',
+      'deviceName'       : 'iPhone XS Simulator',
+      'deviceOrientation': 'portrait',
+      'platformVersion'  : '12.0',
+      'platformName'     : 'iOS',
+    },
+    {
+      'logName': 'ios-device-width',
+      'blue-shot-e2e:config': JSON.stringify({
+        viewport: '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
+        pixelScale: 3
+      }),
       'browserName'      : 'Safari',
       'deviceName'       : 'iPhone XS Simulator',
       'deviceOrientation': 'portrait',
@@ -30,7 +50,6 @@ exports.config = {
     }
     // {'browserName': 'MicrosoftEdge'},
   ],
-
   //NOTE: Sauce only works with certain ports for some browsers (e.g. Edge)
   //https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQS-CanIAccessApplicationsonlocalhost?
   // baseUrl: 'http://localhost:3000/',
@@ -43,16 +62,22 @@ exports.config = {
   },
   beforeLaunch() {
     const express = require('express');
+    const session = require('express-session');
     const serveStatic = require('serve-static');
     const expressModifyResponse = require('express-modify-response');
 
     const app = express();
+    app.use(session());
+    app.get('/set-viewport', (req, res) => {
+      req.session.viewport = req.query.viewport;
+      res.sendStatus(204)
+    });
     app.use('/',
       expressModifyResponse(
-        (req, res) => res.getHeader('Content-Type') && res.getHeader('Content-Type').startsWith('text/html'),
+        (req, res) => req.session.viewport && res.getHeader('Content-Type') && res.getHeader('Content-Type').startsWith('text/html'),
         (req, res, buffer) => buffer.toString().replace(
           '<!-- inject viewport meta here -->',
-          '<meta name="viewport" content="width=1125">'
+          req.session.viewport
         )
       ),
       serveStatic(require('path').join(__dirname, 'src'))
@@ -90,16 +115,22 @@ exports.config = {
 
     enableLogger();
 
-    const browserName = (await browser.getProcessedConfig()).capabilities.browserName;
+    const caps = (await browser.getProcessedConfig()).capabilities;
+    const browserName = caps.browserName;
+
     //Pause so Safari has time to hide it's scroll bars.
     if (browserName === 'safari') {
       setPauseBeforeScreenshot(true);
     }
 
     //used for image paths, etc.
-    setBrowserName(browserName);
+    setBrowserName(caps.logName || browserName);
 
-    const caps = (await browser.getProcessedConfig()).capabilities;
+    const confg = JSON.parse(caps['blue-shot-e2e:config'] || '{}');
+    if (config.viewport) {
+      await browser.get('/set-viewport?viewport=' + encodeURIComponent(caps['blue-shot-e2e:viewport']));
+    }
+
     console.log('capabilities', caps);
     await findViewportInBrowserChrome('<!-- No Viewport meta -->');
     console.log('\n');
@@ -113,7 +144,8 @@ exports.config = {
 
     const chrome = await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
     console.log('chrome', chrome);
-    setViewportAdjustment({ top: 282, left: 0, bottom: 2176, right: 1125 });
+    setViewportAdjustment(config.viewportAdjustment);
+    setPixelScale(config.pixelScale === undefined ? 1 : config.pixelScale);
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
 //    return setViewportSize(800, 600);

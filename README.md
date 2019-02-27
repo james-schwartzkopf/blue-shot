@@ -420,15 +420,18 @@ when using the iOS Simulator & Appium via Sauce Labs.
 First, the screenshots captured by the simulator are actually of the full screen, including the browser chrome.  To account for this
 the XXX option was added to trim the screenshot to the actual browser viewport.
 
-Second, the bottom toolbar appears to overlap the viewport, this can be worked around using the clipView utility. TODO XXX global clip??
+Second the top and right toolbars appear to cast a shadow on the viewport.  You may be able to avoid the effect by setting a clip using
+the clipView utility on the HTML element.
 
 Third, depending on viewport settings the image is often scaled.  With no default specified the viewport (document.documentElement) will
 report 980 pixels, but it wll be scaled to fit the screen width.  Note that window.devicePixelRatio appears to fixed to the device, not
 the current scale factor.  Use the setPixelScale property to set the scale between viewport pixels and screenshot pixels.
 
 Even if you set the viewport so it exactly matches the actual pixel size of the device, the screenshot appears to have compression artifacts.
-This appears to be a simulator/Appium issue, at least as provided by SauceLabs.
-
+This appears to be a simulator/Appium issue, at least as provided by SauceLabs.  This causes obvious lines where images are stitched together.
+Adding extra clipping to scrolling elements may help to overcome some of this, but iOS screenshots are likely suffer from poor quality until 
+the underlying issues with the tooling are addressed.  This will require either extremely forgiving settings in image comparison routines, or
+maintaining a separate set of baseline images for iOS.
 
 
 TODO XXX some examples:

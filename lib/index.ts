@@ -29,6 +29,11 @@ export function setViewportAdjustment(adj: {top: number; left: number, right?: n
   return old;
 }
 
+let pixelScale: number = 1;
+export function setPixelScale(scale: number) {
+  pixelScale = scale;
+}
+
 //To support IE, we need to be careful about the ES features we use here
 //TODO would be nice to have this compile separately so the rest could target es2017
 function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
@@ -379,12 +384,12 @@ function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
     PNG.bitblt(
       screenPng,
       dest,
-      Math.round(r.left),
-      Math.round(r.top),
-      Math.round(r.width),
-      Math.round(r.height),
-      Math.round(destPoint.x),
-      Math.round(destPoint.y)
+      Math.round(r.left * pixelScale),
+      Math.round(r.top * pixelScale),
+      Math.round(r.width * pixelScale),
+      Math.round(r.height * pixelScale),
+      Math.round(destPoint.x * pixelScale),
+      Math.round(destPoint.y * pixelScale)
     );
   }
   captureScreenRegion.clipRect = {top: 0, left: 0, height: Number.MAX_VALUE, width: Number.MAX_VALUE};
@@ -528,7 +533,7 @@ export async function captureElement(browser: WebDriver, el: WebElement, ...extr
     buildCaptureScreenRegion(browser)
   );
 
-  const png = new PNG({height: elInfo.offset.height, width: elInfo.offset.width});
+  const png = new PNG({height: Math.round(elInfo.offset.height * pixelScale), width: Math.round(elInfo.offset.width * pixelScale)});
   await captureViewPort(elInfo.offset, png, {x: 0, y: 0});
 
   await browser.executeScript(cleanUp, parents.map(p => p[0]));

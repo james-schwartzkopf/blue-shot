@@ -61,6 +61,8 @@
     "typescript": "~3.1.0"
   },
   "dependencies": {
+    "@types/express-session": "^1.15.12",
+    "express-session": "^1.15.6",
     "uuencode": "^0.0.4"
   }
 }
