@@ -490,7 +490,7 @@ export async function captureContent(browser: WebDriver, el: WebElement, ...extr
     buildCaptureScreenRegion(browser)
   );
 
-  const png = new PNG({height: region.height, width: region.width});
+  const png = new PNG({height: region.height * pixelScale, width: region.width * pixelScale});
   await captureViewPort(region, png, {x: 0, y: 0});
 
   await browser.executeScript(cleanUp, parents.map(p => p[0]));
@@ -519,7 +519,7 @@ export async function captureContentRegion(
     buildCaptureScreenRegion(browser)
   );
 
-  const png = new PNG({height: region.height, width: region.width});
+  const png = new PNG({height: region.height * pixelScale, width: region.width * pixelScale});
   await captureViewPort(region, png, {x: 0, y: 0});
 
   await browser.executeScript(cleanUp, parents.map(p => p[0]));
