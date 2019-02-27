@@ -366,6 +366,18 @@ function adjustForClip(origin: Point, r: Rect, clip: Rect): [Point, Rect] {
 
 function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
   async function captureScreenRegion(r: Rect, dest: PNG, destPoint: Point): Promise<void> {
+    r = {
+      top: r.top * pixelScale,
+      left: r.left * pixelScale,
+      width: r.width * pixelScale,
+      height: r.height * pixelScale,
+    };
+
+    destPoint = {
+      x: destPoint.x * pixelScale,
+      y: destPoint.y * pixelScale
+    };
+
     if (pauseBeforeScreenshot !== false) {
       if (log) { log('pauseBeforeScreenshot', pauseBeforeScreenshot); }
       //I'm really confused why this cast is needed
@@ -384,12 +396,12 @@ function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
     PNG.bitblt(
       screenPng,
       dest,
-      Math.round(r.left * pixelScale),
-      Math.round(r.top * pixelScale),
-      Math.round(r.width * pixelScale),
-      Math.round(r.height * pixelScale),
-      Math.round(destPoint.x * pixelScale),
-      Math.round(destPoint.y * pixelScale)
+      Math.round(r.left),
+      Math.round(r.top),
+      Math.round(r.width),
+      Math.round(r.height),
+      Math.round(destPoint.x),
+      Math.round(destPoint.y)
     );
   }
   captureScreenRegion.clipRect = {top: 0, left: 0, height: Number.MAX_VALUE, width: Number.MAX_VALUE};
