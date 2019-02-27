@@ -72,7 +72,7 @@ exports.config = {
     });
     app.use('/',
       expressModifyResponse(
-        (req, res) => req.session.viewport && res.getHeader('Content-Type') && res.getHeader('Content-Type').startsWith('text/html'),
+        (req, res) => req.session && req.session.viewport && res.getHeader('Content-Type') && res.getHeader('Content-Type').startsWith('text/html'),
         (req, res, buffer) => buffer.toString().replace(
           '<!-- inject viewport meta here -->',
           req.session.viewport
