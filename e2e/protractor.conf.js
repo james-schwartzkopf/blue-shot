@@ -124,8 +124,8 @@ exports.config = {
     //used for image paths, etc.
     setBrowserName(caps.logName || browserName);
 
-    const confg = JSON.parse(caps['blue-shot-e2e:config'] || '{}');
-    if (config.viewport) {
+    const blueConfig = JSON.parse(caps['blue-shot-e2e:config'] || '{}');
+    if (blueConfig.viewport) {
       await browser.get('/set-viewport?viewport=' + encodeURIComponent(caps['blue-shot-e2e:viewport']));
     }
 
@@ -142,8 +142,8 @@ exports.config = {
 
     const chrome = await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
     console.log('chrome', chrome);
-    setViewportAdjustment(config.viewportAdjustment);
-    setPixelScale(config.pixelScale === undefined ? 1 : config.pixelScale);
+    setViewportAdjustment(blueConfig.viewportAdjustment);
+    setPixelScale(blueConfig.pixelScale === undefined ? 1 : blueConfig.pixelScale);
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
 //    return setViewportSize(800, 600);
