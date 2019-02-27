@@ -1,6 +1,6 @@
 import { $, browser } from 'protractor';
 import { captureElement } from 'blue-shot';
-import { applyMask, fillRect } from '../utils';
+import { applyMask, fillRect, getBrowserName } from '../utils';
 import { PNG } from 'pngjs';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -21,6 +21,9 @@ describe('basic', () => {
     expect(png).toMatchBaseline('basic-tests/test-box-fill-rect.png');
   });
   it('applyMask from readme works', async () => {
+    if (getBrowserName().startsWith('ios')) {
+      return;
+    }
     await browser.get('basic-tests/basic-test.html');
 
     await browser.executeScript((el: HTMLElement) => {
