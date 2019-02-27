@@ -126,7 +126,7 @@ exports.config = {
 
     const blueConfig = JSON.parse(caps['blue-shot-e2e:config'] || '{}');
     if (blueConfig.viewport) {
-      await browser.get('/set-viewport?viewport=' + encodeURIComponent(caps['blue-shot-e2e:viewport']));
+      await browser.get('/set-viewport?viewport=' + encodeURIComponent(blueConfig.viewport));
     }
 
     console.log('capabilities', caps);
