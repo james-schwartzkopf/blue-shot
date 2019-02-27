@@ -21,31 +21,31 @@ exports.config = {
     //{'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
     //{'browserName': 'firefox'},
     //{'browserName': 'safari'},
-    {
-      'logName': 'ios-full-width',
-      'blue-shot-e2e:config': JSON.stringify({
-        viewport: '<meta name="viewport" content="width=1125">',
-        viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
-      }),
-      'browserName'      : 'Safari',
-      'deviceName'       : 'iPhone XS Simulator',
-      'deviceOrientation': 'portrait',
-      'platformVersion'  : '12.0',
-      'platformName'     : 'iOS',
-    },
     // {
-    //   'logName': 'ios-device-width',
+    //   'logName': 'ios-full-width',
     //   'blue-shot-e2e:config': JSON.stringify({
-    //     viewport: '<meta name="viewport" content="width=device-width, initial-scale=1">',
+    //     viewport: '<meta name="viewport" content="width=1125">',
     //     viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
-    //     pixelScale: 3
     //   }),
     //   'browserName'      : 'Safari',
     //   'deviceName'       : 'iPhone XS Simulator',
     //   'deviceOrientation': 'portrait',
     //   'platformVersion'  : '12.0',
     //   'platformName'     : 'iOS',
-    // }
+    // },
+    {
+      'logName': 'ios-device-width',
+      'blue-shot-e2e:config': JSON.stringify({
+        viewport: '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
+        pixelScale: 3
+      }),
+      'browserName'      : 'Safari',
+      'deviceName'       : 'iPhone XS Simulator',
+      'deviceOrientation': 'portrait',
+      'platformVersion'  : '12.0',
+      'platformName'     : 'iOS',
+    }
     // {'browserName': 'MicrosoftEdge'},
   ],
   //NOTE: Sauce only works with certain ports for some browsers (e.g. Edge)
