@@ -11,6 +11,7 @@ let browserName = 'unknown';
 export async function findViewportInBrowserChrome(viewport: string) {
   //TODO figure width out
   //https://stackoverflow.com/questions/31767904/why-is-document-documentelement-clientwidth-980px-on-mobile-phone
+  //tslint:disable-next-line:max-line-length
   //https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/UsingtheViewport/UsingtheViewport.html#//apple_ref/doc/uid/TP40006509-SW25
   await browser.get('data:text/html,' + encodeURI(`
     <!DOCTYPE html>
@@ -31,11 +32,15 @@ export async function findViewportInBrowserChrome(viewport: string) {
   mkdirp.sync(path.dirname(actualFilename));
   fs.writeFileSync(actualFilename, PNG.sync.write(screenPng));
 
+  //tslint:disable:max-line-length
+  //tslint:disable:no-non-null-assertion
   const dpr = await browser.executeScript(() => window.devicePixelRatio);
   const screenDims = await browser.executeScript(() => screen);
   const windowDims = await browser.executeScript(() => ({height: window.innerHeight, width: window.innerWidth}));
-  const docElDims = await browser.executeScript(() => ({tag: document.documentElement.tagName, height: document.documentElement.clientHeight, width: document.documentElement.clientWidth}));
-  const scrollElDims = await browser.executeScript(() => ({tag: document.scrollingElement.tagName, height: document.scrollingElement.clientHeight, width: document.scrollingElement.clientWidth}));
+  const docElDims = await browser.executeScript(() => ({tag: document.documentElement!.tagName, height: document.documentElement!.clientHeight, width: document.documentElement!.clientWidth}));
+  const scrollElDims = await browser.executeScript(() => ({tag: document.scrollingElement!.tagName, height: document.scrollingElement!.clientHeight, width: document.scrollingElement!.clientWidth}));
+  //tslint:enable:max-line-length
+  //tslint:enable:no-non-null-assertion
 
   const midTop = Math.floor(screenPng.height / 2);
   const midLeft = Math.floor(screenPng.width / 2);
@@ -71,6 +76,7 @@ export async function findViewportInBrowserChrome(viewport: string) {
     }
   }
 
+  //tslint:disable:no-console
   const chrome = {top, left, bottom, right};
   console.log(viewport);
   console.log('screenshot dims', {height: screenPng.height, width: screenPng.width});
@@ -80,6 +86,8 @@ export async function findViewportInBrowserChrome(viewport: string) {
   console.log('window', windowDims);
   console.log('doc el', docElDims);
   console.log('doc scroll el', scrollElDims);
+  //tslint:enable:no-console
+
   return chrome;
 }
 
@@ -92,7 +100,7 @@ export function getBrowserName() {
 }
 
 function verifyImage(filename: string, png: PNG) {
-  const baseline = readPNG(path.join(__dirname, `alt-baselines/${browserName}`, filename))
+  const baseline = readPNG(path.join(__dirname, `../alt-baselines/${browserName}`, filename))
     || readPNG(path.join(__dirname, filename));
   const matched = !!baseline  && baseline.data.equals(png.data);
   if (!matched) {
