@@ -25,7 +25,7 @@ exports.config = {
       'logName': 'ios-full-width',
       'blue-shot-e2e:config': JSON.stringify({
         //https://bitsofco.de/ios-safari-and-shrink-to-fit/
-        viewport: '<meta name="viewport" content="width=1125, shrink-to-fit=no">',
+        viewport: '<meta name="viewport" content="width=1125, initial-scale=1, shrink-to-fit=no">',
         viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
       }),
       'browserName'      : 'Safari',

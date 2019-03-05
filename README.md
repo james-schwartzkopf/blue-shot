@@ -433,7 +433,8 @@ Adding extra clipping to scrolling elements may help to overcome some of this, b
 the underlying issues with the tooling are addressed.  This will require either extremely forgiving settings in image comparison routines, or
 maintaining a separate set of baseline images for iOS.
 
-
+TODO shrink-to-fit
+TODO timing issues
 TODO XXX some examples:
 
 {
