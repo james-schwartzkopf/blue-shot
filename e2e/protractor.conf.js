@@ -15,24 +15,24 @@ exports.config = {
   // directConnect: true,
 
   multiCapabilities: [
-    //{'browserName': 'chrome'},
+    // {'browserName': 'chrome'},
 
     // //Note: If we don't disable full page screenshots, IE will reset scroll and dimensions in our screenshots
-    //{'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
+    // {'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
     //{'browserName': 'firefox'},
     //{'browserName': 'safari'},
-    // {
-    //   'logName': 'ios-full-width',
-    //   'blue-shot-e2e:config': JSON.stringify({
-    //     viewport: '<meta name="viewport" content="width=1125">',
-    //     viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
-    //   }),
-    //   'browserName'      : 'Safari',
-    //   'deviceName'       : 'iPhone XS Simulator',
-    //   'deviceOrientation': 'portrait',
-    //   'platformVersion'  : '12.0',
-    //   'platformName'     : 'iOS',
-    // },
+    {
+      'logName': 'ios-full-width',
+      'blue-shot-e2e:config': JSON.stringify({
+        viewport: '<meta name="viewport" content="width=1125">',
+        viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
+      }),
+      'browserName'      : 'Safari',
+      'deviceName'       : 'iPhone XS Simulator',
+      'deviceOrientation': 'portrait',
+      'platformVersion'  : '12.0',
+      'platformName'     : 'iOS',
+    },
     {
       'logName': 'ios-device-width',
       'blue-shot-e2e:config': JSON.stringify({

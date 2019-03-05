@@ -29,8 +29,8 @@ export async function findViewportInBrowserChrome(viewport: string) {
 
   const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));
   const actualFilename = path.join(__dirname, `../../.test-results/${browserName}/test-screen.png`);
-  mkdirp.sync(path.dirname(actualFilename));
-  fs.writeFileSync(actualFilename, PNG.sync.write(screenPng));
+  // mkdirp.sync(path.dirname(actualFilename));
+  // fs.writeFileSync(actualFilename, PNG.sync.write(screenPng));
 
   //tslint:disable:max-line-length
   //tslint:disable:no-non-null-assertion
