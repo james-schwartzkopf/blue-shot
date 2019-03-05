@@ -118,7 +118,7 @@ exports.config = {
 
     //Pause so Safari has time to hide it's scroll bars.
     if (browserName === 'safari') {
-      setPauseBeforeScreenshot(true);
+      setPauseBeforeScreenshot(2000);
     }
 
     //used for image paths, etc.
