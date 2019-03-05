@@ -1,5 +1,6 @@
 import { browser, By, element } from 'protractor';
 import { captureElement, ClipMargins, clipView } from 'blue-shot';
+import { isDisabled } from '../utils';
 
 //tslint:disable:no-non-null-assertion
 
@@ -93,6 +94,10 @@ describe('captureElement', () => {
       expect(scroll).toEqual({scrollTop: 50, scrollLeft: 75});
     });
     it('Scrolling document', async () => {
+      //TODO ios sometimes scales document to fit, throwing things off
+      if (isDisabled('ios-scroll-doc-bug')) {
+        return;
+      }
       const path = 'capture-element/scrolling/scroll-document';
       await browser.get(`${path}.html`);
       const png = await captureElement(browser, element(By.id('test-box')));

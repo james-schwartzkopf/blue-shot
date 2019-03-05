@@ -1,6 +1,8 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
+import { setDisabledTest } from "./src/utils";
+
 const { SpecReporter } = require('jasmine-spec-reporter');
 
 exports.config = {
@@ -24,8 +26,11 @@ exports.config = {
     {
       'logName': 'ios-full-width',
       'blue-shot-e2e:config': JSON.stringify({
-        //https://bitsofco.de/ios-safari-and-shrink-to-fit/
-        viewport: '<meta name="viewport" content="width=1125, initial-scale=1, shrink-to-fit=no">',
+        disabledTests: {
+          // maybe https://bitsofco.de/ios-safari-and-shrink-to-fit/ ?
+          'ios-scroll-doc-bug': true
+        },
+        viewport: '<meta name="viewport" content="width=1125">',
         viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
       }),
       'browserName'      : 'Safari',
@@ -129,6 +134,8 @@ exports.config = {
     if (blueConfig.viewport) {
       await browser.get('/set-viewport?viewport=' + encodeURIComponent(blueConfig.viewport));
     }
+
+    setDisabledTest(blueConfig.disabledTests);
 
     console.log('capabilities', caps);
     await findViewportInBrowserChrome('<!-- No Viewport meta -->');

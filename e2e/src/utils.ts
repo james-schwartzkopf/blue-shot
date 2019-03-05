@@ -99,6 +99,14 @@ export function getBrowserName() {
   return browserName;
 }
 
+let disabledTests: {[flag: string]: boolean} = {};
+export function setDisabledTest(disabled: {[flag: string]: boolean} | undefined) {
+  disabledTests = disabled || {};
+}
+export function isDisabled(...flags: string[]) {
+  return flags.some(f => disabledTests[f]);
+}
+
 function verifyImage(filename: string, png: PNG) {
   const baseline = readPNG(path.join(__dirname, `../alt-baselines/${browserName}`, filename))
     || readPNG(path.join(__dirname, filename));
