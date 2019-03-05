@@ -5,6 +5,7 @@ addons:
   hosts:
     - localhost.local
 script:
+- rm -rf .test-results
 - yarn run build
 - yarn run tslint
 - yarn run e2e-update

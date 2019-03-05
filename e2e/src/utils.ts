@@ -102,7 +102,7 @@ export function getBrowserName() {
 function verifyImage(filename: string, png: PNG) {
   const baseline = readPNG(path.join(__dirname, `../alt-baselines/${browserName}`, filename))
     || readPNG(path.join(__dirname, filename));
-  const matched = !!baseline  && baseline.data.equals(png.data);
+  const matched = !!baseline && baseline.data.equals(png.data);
   if (!matched) {
     const actualFilename = path.join(__dirname, `../../.test-results/${browserName}`, filename);
     mkdirp.sync(path.dirname(actualFilename));
