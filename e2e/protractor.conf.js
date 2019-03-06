@@ -21,28 +21,40 @@ exports.config = {
     // {'browserName': 'internet explorer', 'ie.enableFullPageScreenshot': false},
     //{'browserName': 'firefox'},
     //{'browserName': 'safari'},
+    // {
+    //   'logName': 'ios-full-width',
+    //   'blue-shot-e2e:config': JSON.stringify({
+    //     disabledTests: {
+    //       // maybe https://bitsofco.de/ios-safari-and-shrink-to-fit/ ?
+    //       'ios-scroll-doc-bug': true
+    //     },
+    //     viewport: '<meta name="viewport" content="width=1125">',
+    //     viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
+    //   }),
+    //   'browserName'      : 'Safari',
+    //   'deviceName'       : 'iPhone XS Simulator',
+    //   'deviceOrientation': 'portrait',
+    //   'platformVersion'  : '12.0',
+    //   'platformName'     : 'iOS',
+    // },
+    // {
+    //   'logName': 'ios-device-width',
+    //   'blue-shot-e2e:config': JSON.stringify({
+    //     viewport: '<meta name="viewport" content="width=device-width, initial-scale=1">',
+    //     viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
+    //     pixelScale: 3
+    //   }),
+    //   'browserName'      : 'Safari',
+    //   'deviceName'       : 'iPhone XS Simulator',
+    //   'deviceOrientation': 'portrait',
+    //   'platformVersion'  : '12.0',
+    //   'platformName'     : 'iOS',
+    // }
     {
-      'logName': 'ios-full-width',
+      'logName': 'ios-default-viewport',
       'blue-shot-e2e:config': JSON.stringify({
-        disabledTests: {
-          // maybe https://bitsofco.de/ios-safari-and-shrink-to-fit/ ?
-          'ios-scroll-doc-bug': true
-        },
-        viewport: '<meta name="viewport" content="width=1125">',
         viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
-      }),
-      'browserName'      : 'Safari',
-      'deviceName'       : 'iPhone XS Simulator',
-      'deviceOrientation': 'portrait',
-      'platformVersion'  : '12.0',
-      'platformName'     : 'iOS',
-    },
-    {
-      'logName': 'ios-device-width',
-      'blue-shot-e2e:config': JSON.stringify({
-        viewport: '<meta name="viewport" content="width=device-width, initial-scale=1">',
-        viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
-        pixelScale: 3
+        pixelScale: 1125 / 980
       }),
       'browserName'      : 'Safari',
       'deviceName'       : 'iPhone XS Simulator',
@@ -122,7 +134,7 @@ exports.config = {
 
     //Pause so Safari has time to hide it's scroll bars.
     if (browserName === 'safari') {
-      setPauseBeforeScreenshot(2000);
+      setPauseBeforeScreenshot(3000);
     }
 
     //used for image paths, etc.
