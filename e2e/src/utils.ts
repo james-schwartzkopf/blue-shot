@@ -104,6 +104,11 @@ export function scaleCaptureScreenRegionFactory(
   pauseBeforeScreenshot: number    //wait before screenshot to ensure scrolling is complete
 ): CaptureScreenRegionFactoryFn {
   return (b) => async (rect: Rect, dst: PNG, dstPoint: Point) => {
+    rect = {...rect};
+    dstPoint = {...dstPoint};
+    Object.entries(rect).forEach(([k, v]) => (<any>rect)[k] = Math.round(v));
+    Object.entries(dstPoint).forEach(([k, v]) => (<any>dstPoint)[k] = Math.round(v));
+
     if (pauseBeforeScreenshot > -1) {
       await new Promise(resolve => setTimeout(resolve, pauseBeforeScreenshot));
     }
