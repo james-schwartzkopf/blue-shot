@@ -125,9 +125,9 @@ export function scaleCaptureScreenRegionFactory(
       .bitmap
     ;
 
-    for (let x = rect.left; x < rect.left + rect.width; x++) {
-      for (let y = rect.top; y < rect.top + rect.height; y ++) {
-        const i = (y * src.width + x) * 4;
+    for (let x = 0; x < rect.width; x++) {
+      for (let y = 0; y < rect.height; y++) {
+        const i = ((y + rect.left) * src.width + (x + rect.top)) * 4;
         const j = ((y + dstPoint.y) * dst.width + (x + dstPoint.x)) * 4;
         dst.data[j + 0] = src.data[i + 0];
         dst.data[j + 1] = src.data[i + 1];
