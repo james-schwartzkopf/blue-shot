@@ -418,7 +418,7 @@ export function transformCaptureScreenRegionFactory(
 }
 function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
   const captureScreenRegion = captureScreenRegionFactory(browser) as CaptureContentRectInto;
-  captureScreenRegion.clipRect = {top: 0, left: 0, height: Number.MAX_VALUE, width: Number.MAX_VALUE};
+  captureScreenRegion.clipRect = {top: 20, left: 0, height: Number.MAX_VALUE, width: Number.MAX_VALUE};
   return captureScreenRegion;
 }
 
