@@ -4,7 +4,9 @@ import * as path from 'path';
 import { PNG } from 'pngjs';
 import mkdirp = require('mkdirp');
 import { browser, protractor, WebDriver } from 'protractor';
-import { Rect } from 'blue-shot';
+import { ClipMargins, Rect } from 'blue-shot';
+import { CaptureScreenRegionFactoryFn, Point } from '../../lib';
+import * as Jimp from 'jimp';
 
 let browserName = 'unknown';
 
@@ -93,6 +95,43 @@ export async function findViewportInBrowserChrome(viewport: string) {
 
 export function setBrowserName(name: string) {
   browserName = name.toLowerCase().replace(/\s+/g, '-');
+}
+
+//ios-default-viewport
+export function scaleCaptureScreenRegionFactory(
+  scaleViewportWidth: number, //width in CSS pixels (what the browser reports)
+  screenClip: ClipMargins,    //iOS toolbars/chrome to clip from screenshot
+  pauseBeforeScreenshot: number    //wait before screenshot to ensure scrolling is complete
+): CaptureScreenRegionFactoryFn {
+  return (b) => async (rect: Rect, dst: PNG, dstPoint: Point) => {
+    if (pauseBeforeScreenshot > -1) {
+      await new Promise(resolve => setTimeout(resolve, pauseBeforeScreenshot));
+    }
+    const screen = await b.takeScreenshot();
+    const img = await Jimp.read(Buffer.from(screen, 'base64'));
+    const src = img
+      .crop(
+        screenClip.topHeight,
+        screenClip.leftWidth,
+        img.getWidth() - screenClip.leftWidth - screenClip.rightWidth,
+        img.getHeight() - screenClip.topHeight - screenClip.bottomHeight
+      )
+      .scaleToFit(scaleViewportWidth, Jimp.AUTO)
+      .bitmap
+    ;
+
+    for (let x = rect.left; x < rect.left + rect.width; x++) {
+      for (let y = rect.top; y < rect.top + rect.height; y ++) {
+        const i = (y * src.width + x) * 4;
+        const j = ((y + dstPoint.y) * dst.width + (x + dstPoint.x)) * 4;
+        dst.data[j + 0] = src.data[i + 0];
+        dst.data[j + 1] = src.data[i + 1];
+        dst.data[j + 2] = src.data[i + 2];
+        dst.data[j + 3] = src.data[i + 3];
+      }
+    }
+
+  };
 }
 
 export function getBrowserName() {

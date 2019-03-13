@@ -29,7 +29,7 @@ export function setViewportAdjustment(adj: {top: number; left: number, right?: n
   return old;
 }
 
-let pixelScale: number = 1;
+let pixelScale = 1;
 export function setPixelScale(scale: number) {
   pixelScale = scale;
 }
@@ -194,7 +194,7 @@ function cleanUp(elInfos: ElementInfo<number>[]) {
 }
 
 
-interface Point {
+export interface Point {
   x: number;
   y: number;
 }
@@ -364,7 +364,9 @@ function adjustForClip(origin: Point, r: Rect, clip: Rect): [Point, Rect] {
   ];
 }
 
-function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
+export type CaptureScreenRegionFn = (r: Rect, dest: PNG, destPoint: Point) => Promise<void>;
+export type CaptureScreenRegionFactoryFn = (browser: WebDriver) => CaptureScreenRegionFn;
+function defaultBuildCaptureScreenRegion(browser: WebDriver) {
   async function captureScreenRegion(r: Rect, dest: PNG, destPoint: Point): Promise<void> {
     r = {
       top: r.top * pixelScale,
@@ -404,6 +406,18 @@ function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
       Math.round(destPoint.y)
     );
   }
+}
+
+
+let captureScreenRegionFactory: CaptureScreenRegionFactoryFn = buildCaptureScreenRegion;
+//How many levels can we go
+export function transformCaptureScreenRegionFactory(
+  factoryFactory: (defaultFactory: CaptureScreenRegionFactoryFn) => CaptureScreenRegionFactoryFn
+) {
+  captureScreenRegionFactory = factoryFactory(buildCaptureScreenRegion);
+}
+function buildCaptureScreenRegion(browser: WebDriver): CaptureContentRectInto {
+  const captureScreenRegion = captureScreenRegionFactory(browser) as CaptureContentRectInto;
   captureScreenRegion.clipRect = {top: 0, left: 0, height: Number.MAX_VALUE, width: Number.MAX_VALUE};
   return captureScreenRegion;
 }

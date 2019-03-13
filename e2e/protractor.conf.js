@@ -1,6 +1,8 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
+import { transformCaptureScreenRegionFactory } from "../lib";
+
 const { SpecReporter } = require('jasmine-spec-reporter');
 
 exports.config = {
@@ -53,8 +55,8 @@ exports.config = {
     {
       'logName': 'ios-default-viewport',
       'blue-shot-e2e:config': JSON.stringify({
-        viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
-        pixelScale: 1125 / 980
+        // viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
+        //pixelScale: 1125 / 980
       }),
       'browserName'      : 'Safari',
       'deviceName'       : 'iPhone XS Simulator',
@@ -114,7 +116,7 @@ exports.config = {
 
     const { protractor, browser }       = require("protractor");
     const { enableLogger, setPauseBeforeScreenshot, setViewportAdjustment, setPixelScale }                 = require('blue-shot');
-    const { setViewportSize, setBrowserName, toMatchBaseline, findViewportInBrowserChrome, setDisabledTest } = require('./src/utils');
+    const { setViewportSize, setBrowserName, toMatchBaseline, findViewportInBrowserChrome, setDisabledTest, scaleCaptureScreenRegionFactory } = require('./src/utils');
 
     beforeAll(() => {
       jasmine.addMatchers({
@@ -160,8 +162,14 @@ exports.config = {
 
     const chrome = await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
     console.log('chrome', chrome);
-    setViewportAdjustment(blueConfig.viewportAdjustment);
-    setPixelScale(blueConfig.pixelScale === undefined ? 1 : blueConfig.pixelScale);
+    // setViewportAdjustment(blueConfig.viewportAdjustment);
+    // setPixelScale(blueConfig.pixelScale === undefined ? 1 : blueConfig.pixelScale);
+
+    transformCaptureScreenRegionFactory(() => scaleCaptureScreenRegionFactory(
+      980,
+      {topHeight: 282, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
+      3 * 1000
+    ))
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
 //    return setViewportSize(800, 600);
