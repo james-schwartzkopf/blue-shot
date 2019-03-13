@@ -1,6 +1,8 @@
 const fs = require('fs');
 const {decodeFile} = require('uue');
 
+//node e2e/decode-travis-log.js && rm -rf .test-results && tar -xzf test-results.tgz
+
 const logTxt = fs.readFileSync('travis-log.txt', 'utf-8');
 
 if (fs.existsSync('test-results.tgz')) {

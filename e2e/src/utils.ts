@@ -111,8 +111,8 @@ export function scaleCaptureScreenRegionFactory(
     const img = await Jimp.read(Buffer.from(screen, 'base64'));
     const src = img
       .crop(
-        screenClip.topHeight,
         screenClip.leftWidth,
+        screenClip.topHeight,
         img.getWidth() - screenClip.leftWidth - screenClip.rightWidth,
         img.getHeight() - screenClip.topHeight - screenClip.bottomHeight
       )
