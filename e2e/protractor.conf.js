@@ -69,7 +69,7 @@ exports.config = {
         //pixelScale: 1125 / 980
       }),
       'browserName'      : 'Chrome',
-      'deviceName'       : 'Samsung Galaxy S9 WQHD GoogleAPI Emulator',
+      'deviceName'       : 'Android Emulator',
       'deviceOrientation': 'portrait',
     }
     // {'browserName': 'MicrosoftEdge'},
