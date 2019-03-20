@@ -50,17 +50,27 @@ exports.config = {
     //   'platformVersion'  : '12.0',
     //   'platformName'     : 'iOS',
     // }
+    // {
+    //   'logName': 'ios-default-viewport',
+    //   'blue-shot-e2e:config': JSON.stringify({
+    //     // viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
+    //     //pixelScale: 1125 / 980
+    //   }),
+    //   'browserName'      : 'Safari',
+    //   'deviceName'       : 'iPhone XS Simulator',
+    //   'deviceOrientation': 'portrait',
+    //   'platformVersion'  : '12.0',
+    //   'platformName'     : 'iOS',
+    // }
     {
-      'logName': 'ios-default-viewport',
+      'logName': 'droid-default-viewport',
       'blue-shot-e2e:config': JSON.stringify({
         // viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
         //pixelScale: 1125 / 980
       }),
-      'browserName'      : 'Safari',
-      'deviceName'       : 'iPhone XS Simulator',
+      'browserName'      : 'Android',
+      'deviceName'       : 'Samsung Galaxy S9 WQHD GoogleAPI Emulator',
       'deviceOrientation': 'portrait',
-      'platformVersion'  : '12.0',
-      'platformName'     : 'iOS',
     }
     // {'browserName': 'MicrosoftEdge'},
   ],
@@ -157,17 +167,17 @@ exports.config = {
     await findViewportInBrowserChrome('<meta name="viewport" content="width=1125, initial-scale=1">');
     console.log('\n');
 
-
-    const chrome = await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
-    console.log('chrome', chrome);
+    await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
+    // const chrome = await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
+    // console.log('chrome', chrome);
     // setViewportAdjustment(blueConfig.viewportAdjustment);
     // setPixelScale(blueConfig.pixelScale === undefined ? 1 : blueConfig.pixelScale);
 
-    transformCaptureScreenRegionFactory(() => scaleCaptureScreenRegionFactory(
-      980,
-      {topHeight: 282, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
-      3 * 1000
-    ))
+    // transformCaptureScreenRegionFactory(() => scaleCaptureScreenRegionFactory(
+    //   980,
+    //   {topHeight: 282, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
+    //   3 * 1000
+    // ))
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
 //    return setViewportSize(800, 600);

@@ -10,6 +10,7 @@ import * as Jimp from 'jimp';
 
 let browserName = 'unknown';
 
+let count = 0;
 export async function findViewportInBrowserChrome(viewport: string) {
   //TODO figure width out
   //https://stackoverflow.com/questions/31767904/why-is-document-documentelement-clientwidth-980px-on-mobile-phone
@@ -30,9 +31,9 @@ export async function findViewportInBrowserChrome(viewport: string) {
   `));
 
   const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));
-  const actualFilename = path.join(__dirname, `../../.test-results/${browserName}/test-screen.png`);
-  // mkdirp.sync(path.dirname(actualFilename));
-  // fs.writeFileSync(actualFilename, PNG.sync.write(screenPng));
+  const actualFilename = path.join(__dirname, `../../.test-results/${browserName}-${count++}/test-screen.png`);
+  mkdirp.sync(path.dirname(actualFilename));
+  fs.writeFileSync(actualFilename, PNG.sync.write(screenPng));
 
   //tslint:disable:max-line-length
   //tslint:disable:no-non-null-assertion
@@ -44,45 +45,45 @@ export async function findViewportInBrowserChrome(viewport: string) {
   //tslint:enable:max-line-length
   //tslint:enable:no-non-null-assertion
 
-  const midTop = Math.floor(screenPng.height / 2);
-  const midLeft = Math.floor(screenPng.width / 2);
-  const midColor = getColor(screenPng, midTop, midLeft);
-  function getColor(png: PNG, x: number, y: number) {
-    const index = (png.width * y + x) * 4;
-    //tslint:disable-next-line:no-bitwise
-    return png.data[index] + png.data[index + 1] << 8 + png.data[index + 2] << 16;
-  }
-  let top;
-  for (top = midTop; top > 0; top--) {
-    if (midColor !== getColor(screenPng, midLeft, top)) {
-      break;
-    }
-  }
-  let bottom;
-  for (bottom = midTop; bottom < screenPng.height; bottom++) {
-    if (midColor !== getColor(screenPng, midLeft, bottom)) {
-      break;
-    }
-  }
-
-  let left;
-  for (left = midLeft; left > 0; left--) {
-    if (midColor !== getColor(screenPng, left, midTop)) {
-      break;
-    }
-  }
-  let right;
-  for (right = midLeft; right < screenPng.width; right++) {
-    if (midColor !== getColor(screenPng, right, midTop)) {
-      break;
-    }
-  }
+  // const midTop = Math.floor(screenPng.height / 2);
+  // const midLeft = Math.floor(screenPng.width / 2);
+  // const midColor = getColor(screenPng, midTop, midLeft);
+  // function getColor(png: PNG, x: number, y: number) {
+  //   const index = (png.width * y + x) * 4;
+  //   //tslint:disable-next-line:no-bitwise
+  //   return png.data[index] + png.data[index + 1] << 8 + png.data[index + 2] << 16;
+  // }
+  // let top;
+  // for (top = midTop; top > 0; top--) {
+  //   if (midColor !== getColor(screenPng, midLeft, top)) {
+  //     break;
+  //   }
+  // }
+  // let bottom;
+  // for (bottom = midTop; bottom < screenPng.height; bottom++) {
+  //   if (midColor !== getColor(screenPng, midLeft, bottom)) {
+  //     break;
+  //   }
+  // }
+  //
+  // let left;
+  // for (left = midLeft; left > 0; left--) {
+  //   if (midColor !== getColor(screenPng, left, midTop)) {
+  //     break;
+  //   }
+  // }
+  // let right;
+  // for (right = midLeft; right < screenPng.width; right++) {
+  //   if (midColor !== getColor(screenPng, right, midTop)) {
+  //     break;
+  //   }
+  // }
 
   //tslint:disable:no-console
-  const chrome = {top, left, bottom, right};
+  // const chrome = {top, left, bottom, right};
   console.log(viewport);
   console.log('screenshot dims', {height: screenPng.height, width: screenPng.width});
-  console.log('chrome', chrome);
+  // console.log('chrome', chrome);
   console.log('dpr', dpr);
   console.log('screen', screenDims);
   console.log('window', windowDims);
@@ -90,7 +91,7 @@ export async function findViewportInBrowserChrome(viewport: string) {
   console.log('doc scroll el', scrollElDims);
   //tslint:enable:no-console
 
-  return chrome;
+  // return chrome;
 }
 
 export function setBrowserName(name: string) {
