@@ -68,7 +68,7 @@ exports.config = {
         // viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
         //pixelScale: 1125 / 980
       }),
-      'browserName'      : 'Chrome',
+      //'browserName'      : 'Chrome',
       'deviceName'       : 'Android Emulator',
       'deviceOrientation': 'portrait',
     }
