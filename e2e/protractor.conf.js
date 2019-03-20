@@ -68,7 +68,7 @@ exports.config = {
         // viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
         //pixelScale: 1125 / 980
       }),
-      'browserName'      : 'Chrome',
+      'browserName'      : 'Browser',
       'deviceName'       : 'Samsung Galaxy S9 WQHD GoogleAPI Emulator',
       'deviceOrientation': 'portrait',
     }
