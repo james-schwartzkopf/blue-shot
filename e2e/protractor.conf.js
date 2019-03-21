@@ -71,7 +71,7 @@ exports.config = {
       browserName: 'Chrome',
       deviceName       : 'Android Emulator',
       deviceOrientation: 'portrait',
-      // platformVersion: '8.0',
+      platformVersion: '8.0',
       platformName: 'Android',
     }
     // {'browserName': 'MicrosoftEdge'},
