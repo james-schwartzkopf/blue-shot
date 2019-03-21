@@ -60,11 +60,11 @@
     "tsconfig-paths": "^3.6.0",
     "tslint": "~5.9.1",
     "typescript": "~3.1.0",
-    "uue": "^3.1.2"
-  },
-  "dependencies": {
+    "uue": "^3.1.2",
     "@types/express-session": "^1.15.12",
     "express-session": "^1.15.6",
     "uuencode": "^0.0.4"
+  },
+  "dependencies": {
   }
 }

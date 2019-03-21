@@ -69,8 +69,11 @@ exports.config = {
         //pixelScale: 1125 / 980
       }),
       //'browserName'      : 'Chrome',
-      'deviceName'       : 'Android Emulator',
-      'deviceOrientation': 'portrait',
+      deviceName       : 'Android Emulator',
+      deviceOrientation: 'portrait',
+      browserName: 'Chrome',
+      platformVersion: '8.0',
+      platformName: 'Android',
     }
     // {'browserName': 'MicrosoftEdge'},
   ],
