@@ -406,10 +406,11 @@ function defaultBuildCaptureScreenRegion(browser: WebDriver) {
       Math.round(destPoint.y)
     );
   }
+  return captureScreenRegion;
 }
 
 
-let captureScreenRegionFactory: CaptureScreenRegionFactoryFn = buildCaptureScreenRegion;
+let captureScreenRegionFactory: CaptureScreenRegionFactoryFn = defaultBuildCaptureScreenRegion;
 //How many levels can we go
 export function transformCaptureScreenRegionFactory(
   factoryFactory: (defaultFactory: CaptureScreenRegionFactoryFn) => CaptureScreenRegionFactoryFn
