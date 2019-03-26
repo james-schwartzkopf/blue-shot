@@ -50,30 +50,30 @@ exports.config = {
     //   'platformVersion'  : '12.0',
     //   'platformName'     : 'iOS',
     // }
-    // {
-    //   'logName': 'ios-default-viewport',
-    //   'blue-shot-e2e:config': JSON.stringify({
-    //     // viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
-    //     //pixelScale: 1125 / 980
-    //   }),
-    //   'browserName'      : 'Safari',
-    //   'deviceName'       : 'iPhone XS Simulator',
-    //   'deviceOrientation': 'portrait',
-    //   'platformVersion'  : '12.0',
-    //   'platformName'     : 'iOS',
-    // }
     {
-      'logName': 'droid-default-viewport',
+      'logName': 'ios-default-viewport',
       'blue-shot-e2e:config': JSON.stringify({
         // viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
         //pixelScale: 1125 / 980
       }),
-      browserName: 'Chrome',
-      deviceName       : 'Android Emulator',
-      deviceOrientation: 'portrait',
-      platformVersion: '8.0',
-      platformName: 'Android',
+      'browserName'      : 'Safari',
+      'deviceName'       : 'iPhone XS Simulator',
+      'deviceOrientation': 'landscape',
+      'platformVersion'  : '12.0',
+      'platformName'     : 'iOS',
     }
+    // {
+    //   'logName': 'droid-default-viewport',
+    //   'blue-shot-e2e:config': JSON.stringify({
+    //     // viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
+    //     //pixelScale: 1125 / 980
+    //   }),
+    //   browserName: 'Chrome',
+    //   deviceName       : 'Android Emulator',
+    //   deviceOrientation: 'portrait',
+    //   platformVersion: '8.0',
+    //   platformName: 'Android',
+    // }
     // {'browserName': 'MicrosoftEdge'},
   ],
   //NOTE: Sauce only works with certain ports for some browsers (e.g. Edge)
