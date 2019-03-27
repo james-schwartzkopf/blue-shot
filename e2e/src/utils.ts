@@ -30,6 +30,7 @@ export async function findViewportInBrowserChrome(viewport: string) {
     </html>
   `));
 
+  browser.sleep(3000);
   const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));
   const actualFilename = path.join(__dirname, `../../.test-results/${browserName}-${count++}/test-screen.png`);
   mkdirp.sync(path.dirname(actualFilename));

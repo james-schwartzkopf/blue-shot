@@ -50,6 +50,11 @@ exports.config = {
     //   'platformVersion'  : '12.0',
     //   'platformName'     : 'iOS',
     // }
+    //landscape, home bar
+    //  https://www.reddit.com/r/apple/comments/7kcsqn/is_there_a_way_of_removing_the_annoying_home_bar/
+    //  https://webkit.org/blog/7929/designing-websites-for-iphone-x/
+    //  https://hackernoon.com/designing-for-iphone-x-9-tips-to-create-a-great-looking-application-c9e004b9f370
+    //  https://hackernoon.com/how-you-survive-the-notch-hell-on-ios-android-9badd9d6b935
     {
       'logName': 'ios-default-viewport-landscape',
       'blue-shot-e2e:config': JSON.stringify({
