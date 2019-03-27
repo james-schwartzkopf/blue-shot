@@ -25,7 +25,7 @@ export async function findViewportInBrowserChrome(viewport: string) {
   <!-- inject viewport meta here -->
       </head>
       <body style="background-color:#F00;padding: 0;">
-        <div style="width: 1000px;height: 1000px;">&nbsp;</div>
+        <div style="background-color:#00F;width: 1000px;height: 1000px;">&nbsp;</div>
       </body>
     </html>
   `));
