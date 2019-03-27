@@ -25,14 +25,14 @@ export async function findViewportInBrowserChrome(viewport: string) {
   <!-- inject viewport meta here -->
       </head>
       <body style="background-color:#F00;padding: 0;">
-        <div style="background-color:#00F;width: 1000px;height: 1000px;">&nbsp;</div>
+        <div style="background-color:#00F;width: 100vw;height: 100vh;">&nbsp;</div>
       </body>
     </html>
   `));
 
   browser.sleep(3000);
   const screenPng = PNG.sync.read(Buffer.from(await browser.takeScreenshot(), 'base64'));
-  const actualFilename = path.join(__dirname, `../../.test-results/${browserName}-${count++}/test-screen.png`);
+  const actualFilename = path.join(__dirname, `../../.test-results/test-screen-${browserName}-${count++}.png`);
   mkdirp.sync(path.dirname(actualFilename));
   fs.writeFileSync(actualFilename, PNG.sync.write(screenPng));
 
