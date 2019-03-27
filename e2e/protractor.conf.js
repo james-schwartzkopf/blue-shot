@@ -51,7 +51,7 @@ exports.config = {
     //   'platformName'     : 'iOS',
     // }
     {
-      'logName': 'ios-default-viewport',
+      'logName': 'ios-default-viewport-landscape',
       'blue-shot-e2e:config': JSON.stringify({
         // viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
         //pixelScale: 1125 / 980
@@ -177,8 +177,8 @@ exports.config = {
 
     transformCaptureScreenRegionFactory(() => scaleCaptureScreenRegionFactory(
       980,
-      // {topHeight: 282, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
-      {topHeight: 0, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
+      {topHeight: 282, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
+      // {topHeight: 0, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
       3 * 1000
     ))
 
