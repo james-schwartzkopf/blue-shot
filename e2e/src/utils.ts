@@ -41,6 +41,7 @@ export async function findViewportInBrowserChrome(viewport: string) {
   const dpr = await browser.executeScript(() => window.devicePixelRatio);
   const screenDims = await browser.executeScript(() => screen);
   const windowDims = await browser.executeScript(() => ({height: window.innerHeight, width: window.innerWidth}));
+  const windowOutDims = await browser.executeScript(() => ({height: window.outerHeight, width: window.outerWidth}));
   const docElDims = await browser.executeScript(() => ({tag: document.documentElement!.tagName, height: document.documentElement!.clientHeight, width: document.documentElement!.clientWidth}));
   const scrollElDims = await browser.executeScript(() => ({tag: document.scrollingElement!.tagName, height: document.scrollingElement!.clientHeight, width: document.scrollingElement!.clientWidth}));
   //tslint:enable:max-line-length
@@ -88,6 +89,7 @@ export async function findViewportInBrowserChrome(viewport: string) {
   console.log('dpr', dpr);
   console.log('screen', screenDims);
   console.log('window', windowDims);
+  console.log('window outer', windowOutDims);
   console.log('doc el', docElDims);
   console.log('doc scroll el', scrollElDims);
   //tslint:enable:no-console
