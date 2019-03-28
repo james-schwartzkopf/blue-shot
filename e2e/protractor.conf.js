@@ -58,8 +58,9 @@ exports.config = {
     {
       'logName': 'ios-default-viewport-landscape',
       'blue-shot-e2e:config': JSON.stringify({
-        // viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
-        //pixelScale: 1125 / 980
+        viewport: '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
+        pixelScale: 3
       }),
       'browserName'      : 'Safari',
       'deviceName'       : 'iPhone XS Simulator',
@@ -177,15 +178,15 @@ exports.config = {
     await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
     // const chrome = await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
     // console.log('chrome', chrome);
-    // setViewportAdjustment(blueConfig.viewportAdjustment);
-    // setPixelScale(blueConfig.pixelScale === undefined ? 1 : blueConfig.pixelScale);
+    setViewportAdjustment(blueConfig.viewportAdjustment);
+    setPixelScale(blueConfig.pixelScale === undefined ? 1 : blueConfig.pixelScale);
 
-    transformCaptureScreenRegionFactory(() => scaleCaptureScreenRegionFactory(
-      980,
-      {topHeight: 282, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
-      // {topHeight: 0, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
-      3 * 1000
-    ))
+    // transformCaptureScreenRegionFactory(() => scaleCaptureScreenRegionFactory(
+    //   980,
+    //   {topHeight: 282, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
+    //   // {topHeight: 0, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
+    //   3 * 1000
+    // ))
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
 //    return setViewportSize(800, 600);
