@@ -20,12 +20,12 @@ export async function findViewportInBrowserChrome(viewport: string) {
     <!DOCTYPE html>
     <html lang="en">
       <head>
-        ${viewport}
         <title>title</title>
-  <!-- inject viewport meta here -->
+        <!-- inject viewport meta here -->
+        ${viewport}
       </head>
       <body style="background-color:#F00;padding: 0;">
-        <div style="background-color:#00F;width: 100vw;height: 100vh;">&nbsp;</div>
+        <div style="background-color:#00F;position: fixed; top: 0, left: 0, bottom: 0, right: 0">&nbsp;</div>
       </body>
     </html>
   `));
