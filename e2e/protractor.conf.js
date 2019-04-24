@@ -181,12 +181,12 @@ exports.config = {
     setViewportAdjustment(blueConfig.viewportAdjustment);
     setPixelScale(blueConfig.pixelScale === undefined ? 1 : blueConfig.pixelScale);
 
-    // transformCaptureScreenRegionFactory(() => scaleCaptureScreenRegionFactory(
-    //   980,
-    //   {topHeight: 282, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
-    //   // {topHeight: 0, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
-    //   3 * 1000
-    // ))
+    transformCaptureScreenRegionFactory(() => scaleCaptureScreenRegionFactory(
+      980,
+      {topHeight: 282, leftWidth: 132, rightWidth: 132, bottomHeight: 0},
+      // {topHeight: 0, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
+      3 * 1000
+    ))
 
     //TODO I shrunk this for sauce, need to make sure test are still only scrolling when intended
 //    return setViewportSize(800, 600);
