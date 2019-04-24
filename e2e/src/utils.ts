@@ -26,6 +26,7 @@ export async function findViewportInBrowserChrome(viewport: string) {
       </head>
       <body style="background-color:#F00;padding: 0;">
         <div id="box" style="background-color:#00F;position: fixed; top: 0; left: 0; bottom: 0; right: 0">&nbsp;</div>
+        <div id="spacer" style="width: 200vw; height: 200vh;">&nbsp;</div>
       </body>
     </html>
   `));
@@ -109,6 +110,9 @@ export function scaleCaptureScreenRegionFactory(
   screenClip: ClipMargins,    //iOS toolbars/chrome to clip from screenshot
   pauseBeforeScreenshot: number    //wait before screenshot to ensure scrolling is complete
 ): CaptureScreenRegionFactoryFn {
+
+  window.scrollTo(0, 1);
+
   return (b) => async (rect: Rect, dst: PNG, dstPoint: Point) => {
     rect = {...rect};
     dstPoint = {...dstPoint};
