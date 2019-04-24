@@ -114,7 +114,7 @@ export function scaleCaptureScreenRegionFactory(
   // const firstscroll = browser.executeScript(() => window.scrollTo(0, 10)).then(() => browser.sleep(5000));
 
   return (b) => async (rect: Rect, dst: PNG, dstPoint: Point) => {
-    await firstscroll;
+    // await firstscroll;
 
     rect = {...rect};
     dstPoint = {...dstPoint};
