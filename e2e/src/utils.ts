@@ -25,7 +25,7 @@ export async function findViewportInBrowserChrome(viewport: string) {
         ${viewport}
       </head>
       <body style="background-color:#F00;padding: 0;">
-        <div style="background-color:#00F;position: fixed; top: 0; left: 0; bottom: 0; right: 0">&nbsp;</div>
+        <div id="box" style="background-color:#00F;position: fixed; top: 0; left: 0; bottom: 0; right: 0">&nbsp;</div>
       </body>
     </html>
   `));
@@ -44,6 +44,7 @@ export async function findViewportInBrowserChrome(viewport: string) {
   const windowOutDims = await browser.executeScript(() => ({height: window.outerHeight, width: window.outerWidth}));
   const docElDims = await browser.executeScript(() => ({tag: document.documentElement!.tagName, height: document.documentElement!.clientHeight, width: document.documentElement!.clientWidth}));
   const scrollElDims = await browser.executeScript(() => ({tag: document.scrollingElement!.tagName, height: document.scrollingElement!.clientHeight, width: document.scrollingElement!.clientWidth}));
+  const boxElDims = await browser.executeScript(() => ({tag: '#box', height: document.getElementById('#box')!.clientHeight, width: document.getElementById('#box')!.clientWidth}));
   //tslint:enable:max-line-length
   //tslint:enable:no-non-null-assertion
 
@@ -92,6 +93,7 @@ export async function findViewportInBrowserChrome(viewport: string) {
   console.log('window outer', windowOutDims);
   console.log('doc el', docElDims);
   console.log('doc scroll el', scrollElDims);
+  console.log('box el', boxElDims);
   //tslint:enable:no-console
 
   // return chrome;
