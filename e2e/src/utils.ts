@@ -44,7 +44,7 @@ export async function findViewportInBrowserChrome(viewport: string) {
   const windowOutDims = await browser.executeScript(() => ({height: window.outerHeight, width: window.outerWidth}));
   const docElDims = await browser.executeScript(() => ({tag: document.documentElement!.tagName, height: document.documentElement!.clientHeight, width: document.documentElement!.clientWidth}));
   const scrollElDims = await browser.executeScript(() => ({tag: document.scrollingElement!.tagName, height: document.scrollingElement!.clientHeight, width: document.scrollingElement!.clientWidth}));
-  const boxElDims = await browser.executeScript(() => ({tag: '#box', height: document.getElementById('#box')!.clientHeight, width: document.getElementById('#box')!.clientWidth}));
+  const boxElDims = await browser.executeScript(() => ({tag: '#box', height: document.getElementById('box')!.clientHeight, width: document.getElementById('box')!.clientWidth}));
   //tslint:enable:max-line-length
   //tslint:enable:no-non-null-assertion
 
