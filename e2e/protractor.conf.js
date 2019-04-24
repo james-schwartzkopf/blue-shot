@@ -183,7 +183,8 @@ exports.config = {
 
     transformCaptureScreenRegionFactory(() => scaleCaptureScreenRegionFactory(
       980,
-      {topHeight: 282, leftWidth: 132, rightWidth: 132, bottomHeight: 0},
+      {topHeight: 313, leftWidth: 132, rightWidth: 132, bottomHeight: 0},
+      // {topHeight: 282, leftWidth: 132, rightWidth: 132, bottomHeight: 0},
       // {topHeight: 0, leftWidth: 0, rightWidth: 0, bottomHeight: 0},
       3 * 1000
     ))
