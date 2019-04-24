@@ -178,8 +178,8 @@ exports.config = {
     await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
     // const chrome = await findViewportInBrowserChrome('<meta name="viewport" content="width=1125">');
     // console.log('chrome', chrome);
-    setViewportAdjustment(blueConfig.viewportAdjustment);
-    setPixelScale(blueConfig.pixelScale === undefined ? 1 : blueConfig.pixelScale);
+    // setViewportAdjustment(blueConfig.viewportAdjustment);
+    // setPixelScale(blueConfig.pixelScale === undefined ? 1 : blueConfig.pixelScale);
 
     transformCaptureScreenRegionFactory(() => scaleCaptureScreenRegionFactory(
       980,
