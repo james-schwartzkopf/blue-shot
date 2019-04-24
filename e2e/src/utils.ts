@@ -111,9 +111,11 @@ export function scaleCaptureScreenRegionFactory(
   pauseBeforeScreenshot: number    //wait before screenshot to ensure scrolling is complete
 ): CaptureScreenRegionFactoryFn {
 
-  window.scrollTo(0, 1);
+  const firstscroll = browser.executeAsyncScript(() => window.scrollTo(0, 1));
 
   return (b) => async (rect: Rect, dst: PNG, dstPoint: Point) => {
+    await firstscroll;
+
     rect = {...rect};
     dstPoint = {...dstPoint};
     Object.entries(rect).forEach(([k, v]) => (<any>rect)[k] = Math.round(v));
