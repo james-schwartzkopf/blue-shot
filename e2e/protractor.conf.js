@@ -59,7 +59,7 @@ exports.config = {
       'logName': 'ios-default-viewport-landscape',
       'blue-shot-e2e:config': JSON.stringify({
         // viewport: '<meta name="viewport" content="width=device-width, initial-scale=1">',
-        viewport: `<style>html {min-height: 110vh;}</style>`,
+        //viewport: `<style>html {min-height: 110vh;}</style>`,
         viewportAdjustment: { top: 282, left: 0, bottom: 2176, right: 1125 },
         pixelScale: 3
       }),
