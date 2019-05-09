@@ -132,7 +132,7 @@ exports.config = {
     });
 
     const { protractor, browser }       = require("protractor");
-    const { enableLogger, setPauseBeforeScreenshot, setViewportAdjustment, setPixelScale, transformCaptureScreenRegionFactory }                 = require('blue-shot');
+    const { enableLogger, setDefaultCaptureOptions, clipView, setPauseBeforeScreenshot, setViewportAdjustment, setPixelScale, transformCaptureScreenRegionFactory }                 = require('blue-shot');
     const { setViewportSize, setBrowserName, toMatchBaseline, findViewportInBrowserChrome, setDisabledTest, scaleCaptureScreenRegionFactory } = require('./src/utils');
 
     beforeAll(() => {
@@ -182,6 +182,7 @@ exports.config = {
     // setViewportAdjustment(blueConfig.viewportAdjustment);
     // setPixelScale(blueConfig.pixelScale === undefined ? 1 : blueConfig.pixelScale);
 
+    setDefaultCaptureOptions(clipView(protractor.$('html'), {bottomHeight: 44, topHeight: 0, leftWidth: 0, rightWidth: 0}));
     transformCaptureScreenRegionFactory(() => scaleCaptureScreenRegionFactory(
       980,
       {topHeight: 150, leftWidth: 132, rightWidth: 132, bottomHeight: 0},

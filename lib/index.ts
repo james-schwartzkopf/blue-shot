@@ -34,6 +34,11 @@ export function setPixelScale(scale: number) {
   pixelScale = scale;
 }
 
+let defaultCaptureOptions: ElementCaptureOptions[] = [];
+export function setDefaultCaptureOptions(...options: ElementCaptureOptions[]) {
+  defaultCaptureOptions = options;
+}
+
 //To support IE, we need to be careful about the ES features we use here
 //TODO would be nice to have this compile separately so the rest could target es2017
 function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElement[]*/) {
@@ -57,7 +62,7 @@ function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElemen
   //  send them back to set the scrollTop/scrollLeft using executeScript.
   //  Which I believe is web driver code for !$%& you cache it your damn self >:-<
 
-  function hackUpReturn(data: [ElementInfo<HTMLElement>, number][]): [ElementInfo<number>, number][] {
+  function hackUpReturn(data: [ElementInfo<HTMLElement>, number[]][]): [ElementInfo<number>, number[]][] {
     const elCache: HTMLElement[] = [];
 
     data.forEach(([ei, i]) => {
@@ -65,7 +70,7 @@ function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElemen
     });
 
     (window as any).__blueShotElCache = elCache;
-    return data as any as [ElementInfo<number>, number][];
+    return data as any as [ElementInfo<number>, number[]][];
   }
 
   function hasOverflow(el: HTMLElement) {
@@ -77,20 +82,21 @@ function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElemen
       && (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth || el.scrollTop > 0 || el.scrollLeft > 0)
     );
   }
-  //boooo IE :>(, no Array.findIndex
-  function findIndex<T>(arr: T[], fn: ((e: T) => boolean)) {
+
+  function findIndexes<T>(arr: T[], fn: ((e: T) => boolean)) {
+    const ret: number[] = [];
     for (let i = 0; i < arr.length; i++) {
       if (fn(arr[i])) {
-        return i;
+        ret.push(i);
       }
     }
-    return -1;
+    return ret;
   }
   function findOverflowParent(el: HTMLElement) {
     const offset = {top: el.offsetTop, left: el.offsetLeft};
     let p = el.parentElement;
-    let extra = -1;
-    while (p  && !((extra = findIndex(extraParents, e => e === p)) > -1 || hasOverflow(p))) {
+    let extra: number[] = [];
+    while (p  && !((extra = findIndexes(extraParents, e => e === p)).length > 0 || hasOverflow(p))) {
       p = p.parentElement;
     }
 
@@ -112,10 +118,10 @@ function getOffsetInfo(targetElement: HTMLElement/*, ...extraParents: HTMLElemen
     return {parent: p, offset: offset, extra: extra};
   }
 
-  function getOffsetParents(el: HTMLElement): [ElementInfo<HTMLElement>, number][] {
-    const ret: [ElementInfo<HTMLElement>, number][] = [];
+  function getOffsetParents(el: HTMLElement): [ElementInfo<HTMLElement>, number[]][] {
+    const ret: [ElementInfo<HTMLElement>, number[]][] = [];
 
-    let extra = findIndex(extraParents, ep => ep === el);
+    let extra = findIndexes(extraParents, ep => ep === el);
     let e: HTMLElement | null = el;
     while (e) {
       const bcr = e.getBoundingClientRect();
@@ -473,11 +479,14 @@ async function getElementInfo(
   el: WebElement,
   extraConfig: ElementCaptureOptions[]
 ): Promise<[ElementInfo, CaptureOptions | undefined][]> {
+  extraConfig = [...defaultCaptureOptions, ...extraConfig];
+
   //protractor doesn't map extraConfig properly as an array, so convert to rest args.
-  const ret = (await browser.executeScript<any[]>(getOffsetInfo, el, ...extraConfig.map(ec => ec.el))).map(
+  const ret = (await browser.executeScript<[ElementInfo, number[]][]>(getOffsetInfo, el, ...extraConfig.map(ec => ec.el))).map(
     //getOffsetInfo returned the index of matched CaptureOptions based on
     //  the els we sent above, so map back to the CaptureOptions objects
-    ([p, index]): [ElementInfo, CaptureOptions | undefined] => [p, index > -1 ? extraConfig[index].extra : undefined]
+    ([p, indexes]): [ElementInfo, CaptureOptions | undefined] =>
+      [p, indexes.length > 0 ? indexes.map(i => extraConfig[i].extra).reduce((a, b) => combineCaptureOptions(a, b)) : undefined]
   );
 
   if (log) {
@@ -486,6 +495,17 @@ async function getElementInfo(
   }
 
   return ret;
+}
+
+function combineCaptureOptions(a: CaptureOptions, b: CaptureOptions) {
+  return {
+    clipMargins: {
+      topHeight: Math.max(a.clipMargins.topHeight, b.clipMargins.topHeight),
+      leftWidth: Math.max(a.clipMargins.leftWidth, b.clipMargins.leftWidth),
+      rightWidth: Math.max(a.clipMargins.rightWidth, b.clipMargins.rightWidth),
+      bottomHeight: Math.max(a.clipMargins.bottomHeight, b.clipMargins.bottomHeight),
+    }
+  };
 }
 
 /**
